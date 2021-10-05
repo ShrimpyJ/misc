@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-
 #define NUM_ELEMENTS      5
 #define MAX_DEGREE        3
 
+//what
 typedef struct node
 {
 	int is_leaf;         /* Determines if leaf or node */
