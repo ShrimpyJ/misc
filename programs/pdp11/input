@@ -1,0 +1,5 @@
+add r0,r5
+mov r4,r6
+scc
+sub r0,r2
+exit

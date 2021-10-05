@@ -1,0 +1,71 @@
+CLR(B)  050DD     clear
+COM(B)  051DD     complement (1's)
+INC(B)  052DD     increment
+DEC(B)  053DD     decrement
+NEG(B)  054DD     negate (2's)
+TST(B)  057DD     test
+ROR(B)  060DD     rotate right
+ROL(B)  061DD     rotate left
+ASR(B)  062DD     arith shift right
+ASL(B)  063DD     arith shift left
+SWAB    0003DD    swap bytes
+ADC(B)  055DD     add carry
+SBC(B)  056DD     subtract carry
+SXT     067DD     sign extend
+MOV(B)  1SSDD     move
+CMP(B)  2SSDD     compare
+ADD    06SSDD     add
+SUB    16SSDD     subtract
+BIT(B)  3SSDD     bit test (AND)
+BIC(B)  4SSDD     bit clear
+BIS(B)  5SSDD     bit set (OR)
+MUL    070RSS     multiply
+DIV    071RSS     divide
+ASH    072RSS     shift arith
+ASHC   073RSS     arith shift combined
+XOR    074RDD     exclusive OR
+BR     000400     branch
+BNE    001000     br if not equal to 0
+BEQ    001400     br if equal to 0
+BPL    100000     branch if plus
+BMI    100400     branch if minus
+BVC    102000     br if overflow is clear
+BVS    102400     br if overflow is set
+BCC    103000     br if carry is clear
+BCS    103400     br if carry is set
+BGE    002000     br if greater or eq to 0
+BLT    002400     br if less than 0
+BGT    003000     br if greater than 0
+BLE    003400     br if less or eq to 0
+BHI    101000     br if higher
+BLOS   101400     br if less or eq
+BHIS   103000     br if greater or eq
+BLO    103400     br if lower
+JMP    0001DD     jump
+JSR    004RDD     jump to subroutine
+RTS    00020R     return from subroutine
+MARK   0064NN     mark
+SOB    077RNN     subtract 1 and br (if not eq to 0)
+BPT    000003     breakpoint trap
+IOT    000004     input/output trap
+RTI    000002     return from interrupt
+RTT    000006     return from interrupt
+HALT   000000     halt
+WAIT   000001     wait for interrupt
+RESET  000005     reset external bus
+NOP    000240     no operation
+SPL    00023N     set priority level to N
+MFPI   0065SS     move from previous instr space
+MTPI   0066DD     move to previous instr space
+MFPD   1065SS     move from previous data space
+MTPD   1066DD     move to previous data space
+CLC    000241     clear C
+CLV    000242     clear V
+CLZ    000244     clear Z
+CLN    000250     clear N
+CCC    000257     clear all cc bits
+SEC    000261     set C
+SEV    000262     set V
+SEZ    000264     set Z
+SEN    000270     set N
+SCC    000277     set all cc bits

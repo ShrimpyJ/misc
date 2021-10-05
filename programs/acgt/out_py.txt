@@ -1,0 +1,522 @@
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 70.00 percent
+C/G: 30.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 70.00 percent
+C/G: 30.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 70.00 percent
+C/G: 30.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 60.00 percent
+C/G: 40.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 70.00 percent
+C/G: 30.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 50.00 percent
+C/G: 50.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+
+A/T: 40.00 percent
+C/G: 60.00 percent
+

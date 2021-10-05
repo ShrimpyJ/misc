@@ -1,0 +1,141 @@
+<html>
+
+<head>
+    <title>Login Page</title>
+</head>
+
+<body>
+    <form name="loginForm" method="post" action="login.php">
+    <table width="20%" bgcolor="FF9933" align="center">
+
+        <tr>
+            <td colspan=2><center><font size=4><b>HTML Login Page</b></font></center></td>
+        </tr>
+
+        <tr>
+            <td>Username:</td>
+            <td><input type="text" size=25 name="userid"></td>
+        </tr>
+
+        <tr>
+            <td>Password:</td>
+            <td><input type="Password" size=25 name="pwd"></td>
+        </tr>
+
+        <tr>
+            <td ><input type="Reset"></td>
+            <td><input type="submit" onclick="return check(this.form)" value="Login"></td>
+        </tr>
+
+    </table>
+    
+    </form>
+    <script src="sha512.js"></script>
+    <script language="javascript">
+
+    /* List of usernames and passwords in plain text. */
+    var users = ["Student", "ShrimpyJ", "Blake", "jLen"];
+    var pwds = ["password123", "hunter2", "password123", "password123"];
+
+    /* List of hashed password */
+    var pwdsHashed = ["", "", "", ""];
+
+    /* Check to see if given password is correct. Case sensitive.
+       Returns: True on success, False on failure */
+    function checkPwd(pwds, pwd, userIndex)
+    {
+        if (userIndex == -1){       // Username is not correct
+            return false;
+        }
+ 
+        if (pwds[userIndex] == pwd){
+            return true;
+        }
+
+        return false;     // Return false by default
+    }
+
+    /* Check to see if given user is in list of user. Case insenstive.
+       Returns: index of user in user list if found, -1 otherwise */
+    function checkUser(users, user)
+    {
+        for (var i = 0; i < users.length; i++){
+            if (users[i].toLowerCase() == user.toLowerCase()){
+                return i;  //return index of user if they exist
+            }
+        }
+        return -1;     //return -1 if user does not exist
+    }
+
+    function rejectLogin()
+    {
+        alert("Incorrect username or password");
+        return false;
+    }
+
+    function hashPwd(pwd)
+    {
+        var hash;
+        var i;
+        var c;
+        hash = 0;
+        for (var i = 0; i < pwd.length; i++){
+            c = pwd.charCodeAt(i);
+            hash = ((hash << 5) - hash) + c;
+            hash |= 0;
+        }
+
+        return hash;
+    }
+
+    function hashPwds(pwds, pwdsHashed)
+    {
+        for (var i = 0; i < pwds.length; i++){
+            pwdsHashed[i] = hashPwd(pwds[i]);
+        }
+    }
+
+    function checkPwdHashed(pwdsHashed, pwd, userIndex)
+    {
+        if (userIndex == -1){    // Invalid username
+            return false;
+        }
+
+        var hashed = hashPwd(pwd);
+
+        if (pwdsHashed[userIndex] == hashed){
+            return true;
+        }
+
+        return false;      // Return false by default
+    }
+
+    /* Get username and password from user, check if they are both correct. */
+    function check(form)
+    {
+
+        /* Hash passwords */
+        hashPwds(pwds, pwdsHashed);
+
+        /* Check for username */
+        var userIndex = checkUser(users, form.userid.value);
+        if (userIndex == -1){
+          return rejectLogin();
+        }
+
+        /* Check for password */
+        else{
+            if (checkPwdHashed(pwdsHashed, form.pwd.value, userIndex)){
+                return true;
+            }else{
+                return rejectLogin();
+            }
+        }
+        return false;   // Return false by default
+
+    }
+
+    </script>
+
+</body>
+</html>

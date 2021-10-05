@@ -1,0 +1,37 @@
+<h1>Tabber</h1>
+
+<ol>
+<li>Write guitar tabs as a formatted series of characters</li>
+<li>Save the file with the extension .tabr</li>
+<li>Run Tabber on the .tabr file to have in converted into an ASCII .txt file</li>
+</ol>
+
+<h2>Overview</h2>
+
+<ul>
+<li>Start with a header which contains:
+<ul>
+<li>Song name (optional)</li>
+<li>Artist name (optional)</li>
+<li>Album name (optional)</li>
+<li>Release year (optional)</li>
+<li>String tunings from lowest to highest (required)</li>
+</ul></li>
+<li>Each line is a measure</li>
+</ul>
+
+<h2>Detailed overview</h2>
+
+<p>Header info should be at the beginning of the .tabr file. Possible info is song, artist, album, year, and tuning, though <strong>tuning is required.</strong></p>
+
+<p>Simply type the info label (case-insensitive) followed by a <strong>:</strong> with <strong>no space between the label or :</strong>. Then type the info itself following the <strong>:</strong> (does not matter if spaces are between the <strong>:</strong> and info).</p>
+
+<p><strong>The only required piece of info is the tuning.</strong> The other info can be listed in <strong>any order</strong> but will always appear in the same order in the output. See the example below (ignore the backticks if viewing raw .md file).</p>
+
+<p><code>song:tabr example</code> <br />
+<code>artist:Alexander Brock</code> <br />
+<code>album:tabr tutorial</code> <br />
+<code>year:2021</code> <br />
+<code>tuning:eadgbe</code>  </p>
+
+<p>If you want to do sharp notes, simply put a <strong>#</strong> after the note. <strong>For flat notes, put an underscore instead of a <em>b</em> since <em>b</em> will be interpreted as a note.</strong></p>

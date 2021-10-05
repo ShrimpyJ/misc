@@ -1,0 +1,16 @@
+TARGETS=main stock date linkedList
+CC=gcc
+LD=gcc
+
+all: $(TARGETS)
+stockprgm: main.o stock.o linkedList.o
+	cc -o main.o stock.o linkedList.o
+main.o: main.c date.h stock.h linkedList.h
+	cc -c main.c
+stock.o: stock.c stock.h date.h
+	cc -c stock.c
+linkedList.o: linkedList.c linkedList.h
+	cc -o linkedList.c
+
+clean:
+	rm -f *.o $(TARGETS)
