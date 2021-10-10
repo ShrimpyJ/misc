@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+// *teateatajektjaetkajktjaektjeaktjaektjeljtklejkltjakl
+// *teateatajektjaetkajktjaektjeaktjaektjeljtklejkltjakl
+// *teateatajektjaetkajktjaektjeaktjaektjeljtklejkltjakl
+// *teateatajektjaetkajktjaektjeaktjaektjeljtklejkltjakl
+// *teateatajektjaetkajktjaektjeaktjaektjeljtklejkltjakl
+// *teateatajektjaetkajktjaektjeaktjaektjeljtklejkltjakl
+
 typedef enum {false, true} bool;
 
 void get_pwd(char* pwd)
