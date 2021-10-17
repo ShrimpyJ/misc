@@ -48,14 +48,14 @@ func dirstr(dir int) string {
 func (g *Guest) Move() int {
 	var viable []int
 
-	fmt.Printf("Guest %d is facing %s on tile %d\n", g.id, dirstr(g.facing), g.pos)
+	//fmt.Printf("Guest %d is facing %s on tile %d\n", g.id, dirstr(g.facing), g.pos)
 
 	/* If in a dead end, turn around and walk out. Return new position */
 	if g.pos % 2 != 0 {
 		g.facing = Right
 		g.pos--
-		fmt.Printf("Guest %d has entered and exited the dead end on tile %d and emerged facing Right on tile %d\n",
-		            g.id, g.pos+1, g.pos)
+		//fmt.Printf("Guest %d has entered and exited the dead end on tile %d and emerged facing Right on tile %d\n",
+		//            g.id, g.pos+1, g.pos)
 		return g.pos
 	}
 
@@ -125,7 +125,7 @@ func (g Guest) Start(s *Shared) int {
 	if s.concurrency {
 		s.c <- g.Print_Done(s)
 	} else {
-		fmt.Printf("%s", g.Print_Done(s))
+		//fmt.Printf("%s", g.Print_Done(s))
 	}
 	s.completed++
 
