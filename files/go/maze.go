@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const MS = 25
+
 const (
 	Up int = iota
 	Right
@@ -20,6 +22,12 @@ type Guest struct {
 	pos         int
 	moves       int
 	facing      int
+	m          *Maze
+}
+
+type Maze struct {
+	pos       []byte
+	length      int
 }
 
 type Shared struct {
@@ -29,6 +37,26 @@ type Shared struct {
 	length_digits int
 	concurrency   bool
 	c             chan string
+}
+
+func (m *Maze) Init() {
+	for i := 0; i < m.length*2-1; i++ {
+		m.pos = append(m.pos, 'x')
+	}
+}
+
+func (g *Guest) Print(length int) {
+	for i := length-1; i >= 0; i-- {
+		if g.pos == i*2 {
+			fmt.Println("[O|")
+		} else if g.pos == i*2+1 {
+			fmt.Println("O |")
+		} else {
+			fmt.Println("[ |")
+		}
+	}
+	fmt.Println()
+	time.Sleep(MS * time.Millisecond)
 }
 
 func dirstr(dir int) string {
@@ -112,16 +140,18 @@ func (g Guest) Print_Done(s *Shared) string {
 	for i := 0; i < s.guest_digits - get_digits(g.id); i++ {
 		str += fmt.Sprintf(" ")
 	}
-	str += fmt.Sprintf("%d has escaped after %12d moves\n", g.id, g.moves)
+	//str += fmt.Sprintf("%d has escaped after %12d moves\n", g.id, g.moves)
 	return str
 }
 
 func (g Guest) Start(s *Shared) int {
 	for g.pos < s.length*2 {
+		g.Print(s.length)
 		g.Move()
 		g.moves++
 	}
 
+	g.Print(s.length)
 	if s.concurrency {
 		s.c <- g.Print_Done(s)
 	} else {
@@ -211,6 +241,9 @@ func main() {
 		g.pos = 0
 		g.moves = 0
 		g.facing = Up
+		g.m = new(Maze)
+		g.m.length = s.length
+		g.m.Init()
 		guests = append(guests, g)
 		if concurrency {
 			go g.Start(s)
