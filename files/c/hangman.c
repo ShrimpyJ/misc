@@ -159,9 +159,8 @@ int check_alphabet(char alphabet[], char c)
 int check_guess(char phrase[], char c)
 {
 	int i;
-	int ret[strlen(phrase)];
 
-	for (i = 0; i < strlen(phrase); i++){
+	for (i = 0; i < (int) strlen(phrase); i++){
 		if (phrase[i] == c) return i;
 	}
 	return -1;
@@ -171,7 +170,7 @@ int check_victory(char uncovered[])
 {
 	int i;
 
-	for (i = 0; i < strlen(uncovered); i++){
+	for (i = 0; i < (int) strlen(uncovered); i++){
 		if (uncovered[i] == '_') return 0;
 	}
 	return 1;
@@ -185,7 +184,7 @@ void print_info(int strikes, char alphabet[], char uncovered[])
 	printf(uncovered);
 }
 
-int main(int argc, char** argv)
+int main()
 {
 	FILE *fp;
 	char **arr;
@@ -220,7 +219,7 @@ int main(int argc, char** argv)
 
 	/* Select random line from file and use it as phrase */
 	r = rand() % f_items;
-	for (i = 0; i < strlen(arr[r]); i++){
+	for (i = 0; i < (int) strlen(arr[r]); i++){
 		phrase[i] = arr[r][i];
 	}
 	phrase[i] = '\0';
@@ -235,7 +234,7 @@ int main(int argc, char** argv)
 	alphabet[i+1] = '\0';
 
 	/* Create uncovered phrase empty at game start */
-	for (i = 0; i < strlen(phrase); i++){
+	for (i = 0; i < (int) strlen(phrase); i++){
 		if (phrase[i] >= 'a' && phrase[i] <= 'z') uncovered[i] = '_';
 		else if (phrase[i] >= 'A' && phrase[i] <= 'Z') uncovered[i] = '_';
 		else uncovered[i] = phrase[i];
@@ -259,7 +258,7 @@ int main(int argc, char** argv)
 		alphabet[c-'a'] = c;
 
 		pass = 0;
-		for (i = 0; i < strlen(phrase); i++){
+		for (i = 0; i < (int) strlen(phrase); i++){
 			if (phrase[i] == c || phrase[i]+32 == c){
 				uncovered[i] = phrase[i];
 				correct++;
