@@ -116,7 +116,6 @@ func (g *Guest) Move() int {
 	}
 
 FOUND:
-	//fmt.Printf("%s\n", dirstr(dir))
 	g.facing = dir
 
 	if dir == Up {
@@ -140,22 +139,22 @@ func (g Guest) Print_Done(s *Shared) string {
 	for i := 0; i < s.guest_digits - get_digits(g.id); i++ {
 		str += fmt.Sprintf(" ")
 	}
-	//str += fmt.Sprintf("%d has escaped after %12d moves\n", g.id, g.moves)
+	str += fmt.Sprintf("%d has escaped after %12d moves\n", g.id, g.moves)
 	return str
 }
 
 func (g Guest) Start(s *Shared) int {
 	for g.pos < s.length*2 {
-		g.Print(s.length)
+		//g.Print(s.length)
 		g.Move()
 		g.moves++
 	}
 
-	g.Print(s.length)
+	//g.Print(s.length)
 	if s.concurrency {
 		s.c <- g.Print_Done(s)
 	} else {
-		//fmt.Printf("%s", g.Print_Done(s))
+		fmt.Printf("%s", g.Print_Done(s))
 	}
 	s.completed++
 
