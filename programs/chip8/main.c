@@ -159,7 +159,7 @@ int main(int argc, char **argv)
       }
     }
     
-    for (int f = 0; f < 16; f++) printf("%d ", vm->key[f]);
+    //for (int f = 0; f < 16; f++) printf("%d ", vm->key[f]);
     SDL_Delay(TICKRATE);
 
     chip8_tick(vm);

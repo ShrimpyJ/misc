@@ -49,7 +49,7 @@ struct chip8_vm *chip8_init()
 void chip8_load(struct chip8_vm *vm, const char* game)
 {
   FILE *f;
-  long size;
+  size_t size;
   void *buf;
 
   // Open game file
@@ -91,23 +91,56 @@ void set_pixel(chip8_vm *vm, int x, int y, int on)
   vm->gfx[byte_index] = byte;
 }
 
-void draw_sprite(struct chip8_vm *vm, int startX, int startY, int endX, int endY)
+//void draw_sprite(struct chip8_vm *vm, int startX, int startY, int endX, int endY)
+//{
+//  int x, y;
+//
+//  for (y = startY; y < endY; y++){
+//    uint8_t spriteByte = vm->memory[vm->I + (y - startY)];
+//    for (x = startX; x < endX; x++){
+//      int spritePixel = spriteByte & (0x80 >> (x - startX));
+//      int screenPixel = chip8_getPixel(vm, x, y);
+//
+//      if (spritePixel){
+//        if (screenPixel){
+//          vm->V[0xF] = 1;
+//        }
+//        set_pixel(vm, x, y, screenPixel == 0 ? 1 : 0);
+//      }
+//    }
+//  }
+//}
+
+void draw_sprite(struct chip8_vm *vm)
 {
-  int x, y;
+  uint8_t x = vm->V[(vm->opcode >> 8) & 0xF];
+  uint8_t y = vm->V[(vm->opcode >> 4) & 0xF];
+  uint8_t n = vm->opcode & 0xF;
+  uint8_t bytes[n];
 
-  for (y = startY; y < endY; y++){
-    uint8_t spriteByte = vm->memory[vm->I + (y - startY)];
-    for (x = startX; x < endX; x++){
-      int spritePixel = spriteByte & (0x80 >> (x - startX));
-      int screenPixel = chip8_getPixel(vm, x, y);
+  int index = 0;
+  for (int i = 0; i < n*2; i+=2){
+    bytes[index] = (vm->memory[vm->I+i] << 8 | vm->memory[vm->I+i+1]) & 0xFF;
+    index++;
+  }
 
-      if (spritePixel){
-        if (screenPixel){
-          vm->V[0xF] = 1;
-        }
-        set_pixel(vm, x, y, screenPixel == 0 ? 1 : 0);
+  for (int i = 0; i < n; i++) printf("0x%X\n", bytes[i]);
+  
+  index = 0;
+  for (int i = y; i < y+n; i++){
+    for (int j = x; j < x+8; j++){
+      int pixel = bytes[index] & (0x80 >> j-x);
+      printf("at %d: %d ", (i)*HEIGHT+(j), pixel);
+      if(pixel){
+        //vm->gfx[i*HEIGHT+j] = 1;
+        vm->gfx[i*HEIGHT+j] = 255;
+        //set_pixel(vm, j, i, pixel == 0 ? 1 : 0);
+        printf("DRAWING");
       }
+      printf("\n");
     }
+    printf("\n");
+    index++;
   }
 }
 
@@ -121,7 +154,7 @@ void chip8_tick(struct chip8_vm *vm)
   vm->opcode = vm->memory[vm->pc] << 8 | vm->memory[vm->pc+1];
   vm->pc += 2;
 
-  printf("opcode: 0x%04X\n", vm->opcode);
+  //printf("opcode: 0x%04X\n", vm->opcode);
 
   // Decode and execute
   switch (vm->opcode & 0xF000){
@@ -261,21 +294,22 @@ void chip8_tick(struct chip8_vm *vm)
 
     // 0xD
     case 0xD000:  // DXYN: Draws sprite at coordinate (VX, VY) with width=8 height=N
-      startX = vm->V[(vm->opcode >> 8) & 0xf];
-      startY = vm->V[(vm->opcode >> 4) & 0xf];
-      n = vm->opcode & 0xf;
+//      startX = vm->V[(vm->opcode >> 8) & 0xF];
+//      startY = vm->V[(vm->opcode >> 4) & 0xF];
+//      n = vm->opcode & 0xF;
+//
+//      if (startX >= WIDTH)
+//        startX = startX % WIDTH;
+//      if (startY >= HEIGHT)
+//        startY = startY % HEIGHT;
+//
+//      endX = startX+8 < WIDTH ? startX+8 : WIDTH;
+//      endY = startY+n < HEIGHT ? startX+n : HEIGHT;
+//
+//      vm->V[0xF] = 0;
 
-      if (startX >= WIDTH)
-        startX = startX % WIDTH;
-      if (startY >= HEIGHT)
-        startY = startY % HEIGHT;
-
-      endX = startX+8 < WIDTH ? startX+8 : WIDTH;
-      endY = startY+n < HEIGHT ? startX+n : HEIGHT;
-
-      vm->V[0xf] = 0;
-
-      draw_sprite(vm, startX, startY, endX, endY);
+//      draw_sprite(vm, startX, startY, endX, endY);
+      draw_sprite(vm);
     break;
 
     // 0xE
