@@ -1,16 +1,12 @@
 CC=gcc
-NAME=chip8
-CFLAGS=`sdl2-config --cflags ` -g -W -I `sdl2-config --prefix`/include/
+OUT=chip8
+SOURCE=main.c chip8.c
+OBJS=main.o chip8.o
+HEADER=chip8.h
+FLAGS=-lSDL2 -lSDL2main -g -Wall
 
-LDFLAGS=`sdl2-config --libs`
-
-OBJS=main.o
-
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c
-
-chip8: main.o
-	gcc $(CFLAGS) -o chip8 main.o -L $(LDFLAGS)
+all:
+	$(CC) $(SOURCE) $(FLAGS) -o $(OUT)
 
 clean:
-	rm -f *.o
+	rm -f $(OBJS)
