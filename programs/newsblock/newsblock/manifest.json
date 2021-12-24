@@ -1,0 +1,19 @@
+{
+
+  "manifest_version": 2,
+  "name": "NewsBlock",
+  "version": "1.0",
+
+  "description": "Block news channels from YouTube search results.",
+
+  "icons": {
+    "48": "newsblock.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*.youtube.com/*"],
+      "js": ["channels.js", "newsblock.js"]
+    }
+  ]
+}

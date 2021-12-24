@@ -3,8 +3,8 @@
 ### Using a list of search queries, add any (non-YouTube)          ###
 ### channel which appears in the results page to a blocklist file  ###
 
-blocklist="blocklist.txt"
 queries="queries.txt"
+blocklist="blocklist.txt"
 jsfile="channels.js"
 
 # Download HTML pages for each query in the queries file
