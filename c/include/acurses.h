@@ -47,25 +47,62 @@ const enum AC_COLOR { WH_WH, BL_WH, BK_WH, GR_WH, CY_WH, YL_WH, RD_WH, MG_WH,
 typedef struct ac_screen {
   WINDOW *win;
   int height, width;
-  int start_y, start_x;
+  int start_y, start_x;        // Absolute coordinates
+  int mid_y, mid_x;
+  int end_y, end_x;
+
+  int start_yRel, start_xRel;  // Relative coordinates
+  int mid_yRel, mid_xRel;
+  int end_yRel, end_xRel;
   int color_pair;
   int field_size;
 } ACscreen;
+
+// All function delcarations for ease of reference
+ACscreen *ac_screenInit(int height, int width, int start_y, int start_x);
+void ac_drawBorder(ACscreen *s);
+void ac_drawBorderCh(ACscreen *s, char horizontal, char vertical, char corner);
+int ac_printField(ACscreen *s, int y, int x, int field_size, char field[]);
+void ac_printFields(ACscreen *s, int y, int x, int field_size, char *fields[], int nfields);
+void ac_changeColor(ACscreen *s, int pair);
+void ac_drawLineH(ACscreen *s, int y, char c, int overwrite_border);
+void ac_drawLineV(ACscreen *s, int x, char c, int overwrite_border);
+int ac_printCenter(ACscreen *s, int y, char *str);
+int ac_printRight(ACscreen *s, int y, char *str, int offset);
+void ac_colorPairsInit();
+void ac_colorStart();
+void ac_init(int echo, int newline_mode);
+void ac_close();
+void ac_end();
+
 
 // Initialize a new screen with relevant info.
 // Pass AC_YPOS in place of start_y to have
 // the new window be placed directly below
 // the most recently created window.
-
-// start_x must be set manually if you want to
-// create the window to the left/right of another.
+// You can use any existing window's start, mid, and end values
+// to spawn new windows next to or inside of them.
 ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
 {
   ACscreen *s = malloc(sizeof(ACscreen));
-  s->start_y = start_y;
-  s->start_x = start_x;
+
   s->height = height;
   s->width = width;
+
+  s->start_y = start_y;
+  s->start_x = start_x;
+  s->end_y = s->start_y + s->height;
+  s->end_x = s->start_x + s->width;
+  s->mid_y = s->end_y / 2;
+  s->mid_x = s->end_x / 2;
+
+  s->start_yRel = 0;
+  s->start_xRel = 0;
+  s->end_yRel = s->height-1;
+  s->end_xRel = s->width-1;
+  s->mid_yRel = s->end_yRel / 2;
+  s->mid_xRel = s->end_xRel / 2;
+
   WINDOW *win = newwin(height, width, start_y, start_x);
   s->win = win;
   AC_YPOS += s->height;
@@ -258,6 +295,7 @@ int ac_printRight(ACscreen *s, int y, char *str, int offset)
   mvwaddstr(s->win, y, pos, str);
 }
 
+// There is no need to call this since it's called by ac_colorStart()
 // Initialize the color pairs found in the COLORS enum.
 // Two color pairs per line to save vertical space.
 void ac_colorPairsInit()

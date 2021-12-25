@@ -11,164 +11,177 @@
 
 #define FIELD_SIZE   20
 #define MAXLEN       80
+#define SLIDER_LEN   24
 
-typedef struct category {
-  char key;
-  char val[80];
-} Category;
+#define SPEED_FAST   16
+#define SPEED_MID     4
+#define SPEED_SLOW    1
 
-typedef struct item {
-  char name[MAXLEN];
-  char model[MAXLEN];
-  char categories[MAXLEN];
-  char serial[MAXLEN];
+#define INFO_COLOR "WH_BK"
 
-  char room[MAXLEN];
-  char purchase_date[MAXLEN];
+typedef struct slider {
+  ACscreen *parent;
+  int val;
+  int min;
+  int max;
+  int length;
+  int wrap;
+  int horizontal;
+  int start_y;
+  int start_x;
+  char label[80];
+  int color;
+} Slider;
 
-  char comment[MAXLEN];
-
-  char cost[MAXLEN];
-  char salvage_value[MAXLEN];
-  char lifetime[MAXLEN];
-} Item;
-
-Item item_init(char *name, char *model, char *categories, char *serial,
-               char *room, char *purchase_date,
-               char *comment,
-               char *cost, char *salvage_value, char *lifetime)
-{
-  Item item;
-
-  strcpy(item.name, name);
-  strcpy(item.model, model);
-  strcpy(item.categories, categories);
-  strcpy(item.serial, serial);
-
-  strcpy(item.room, room);
-  strcpy(item.purchase_date, purchase_date);
-
-  strcpy(item.comment, comment);
-
-  strcpy(item.cost, cost);
-  strcpy(item.salvage_value, salvage_value);
-  strcpy(item.lifetime, lifetime);
-
-  return item;
-}
+const char* IMAGE =
+"      ------\n\
+      |    |\n\
+           |\n\
+           |\n\
+           |\n\
+           |\n\
+           |\n\
+           |\n\
+    ========\n";
 
 void draw_header(ACscreen *s)
 {
-  ac_changeColor(s, CY_BK);
-  mvwaddstr(s->win, 0, 0, "INVENTORY MENU");
-  ac_changeColor(s, YL_BK);
-  ac_printCenter(s, 0, "PERSONAL INVENTORY");
-  ac_changeColor(s, CY_BK);
-  ac_printRight(s, 0, "SATURDAY 25 APR 15", 0);
+  ac_changeColor(s, BL_BK); ac_printCenter(s, 0, "COLOR PICKER");
 
-  ac_changeColor(s, GR_BK);
-  mvwaddstr(s->win, 1, 0, "LAST CHANGED 10 SEP 90 at 11:39am");
-  ac_printRight(s, 1, "HEADER PAGE", 0);
-
-  ac_changeColor(s, YL_BK);
-  mvwaddstr(s->win, 2, 0, "INDEX: [item name] Computer XT");
+  wrefresh(s->win);
 }
 
-void draw_item(ACscreen *s, Item item)
+Slider *slider_init(ACscreen *parent, int min, int max, int length, int wrap, int horizontal)
 {
-  int i, j;
-  int field_size = s->field_size;
-  char field[80];
-  int len;
-  int startX = 2;
-  int cursor_posX = startX;
-
-  ac_printField(s, 1, cursor_posX, field_size, "ITEM NAME:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 1, cursor_posX += field_size, field_size, item.name);
-  ac_changeColor(s, BL_BK);
-  ac_printField(s, 1, cursor_posX += field_size, field_size, "CATEGORIES");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 1, cursor_posX += field_size, field_size, item.categories);
-  ac_changeColor(s, BL_BK);
-
-  cursor_posX = startX;
-  ac_printField(s, 2, cursor_posX, field_size, "MODEL:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 2, cursor_posX += field_size, field_size, item.model);
-  ac_changeColor(s, BL_BK);
-  ac_printField(s, 2, cursor_posX += field_size, field_size, "SERIAL NUMBER:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 2, cursor_posX += field_size, field_size, item.serial);
-  ac_changeColor(s, BL_BK);
-
-
-  ac_drawLineH(s, 3, LINE_H, 0);
-  cursor_posX = startX;
-  ac_printField(s, 4, cursor_posX, field_size, "ROOM:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 4, cursor_posX += field_size, field_size, item.room);
-  ac_changeColor(s, BL_BK);
-  ac_printField(s, 4, cursor_posX += field_size, field_size, "DATE PURCHASED:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 4, cursor_posX += field_size, field_size, item.purchase_date);
-  ac_changeColor(s, BL_BK);
-
-
-  ac_drawLineH(s, 5, LINE_H, 0);
-  cursor_posX = startX;
-  ac_printField(s, 6, cursor_posX, field_size, "COMMENT");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 6, cursor_posX += field_size, field_size*2, item.comment);
-  ac_changeColor(s, BL_BK);
-
-
-  ac_drawLineH(s, 7, LINE_H, 0);
-  cursor_posX = startX;
-  ac_printField(s, 8, cursor_posX, field_size, "COST:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 8, cursor_posX += field_size, field_size, item.cost);
-  ac_changeColor(s, BL_BK);
-  ac_printField(s, 8, cursor_posX += field_size, field_size, "SALVAGE VALUE:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 8, cursor_posX += field_size, field_size, item.salvage_value);
-  ac_changeColor(s, BL_BK);
-
-  cursor_posX = startX;
-  ac_printField(s, 9, cursor_posX, field_size, "LIFETIME:");
-  ac_changeColor(s, WH_BK);
-  ac_printField(s, 9, cursor_posX += field_size, field_size, item.lifetime);
-  ac_changeColor(s, BL_BK);
-
-
-  ac_drawLineH(s, 10, LINE_H, 0);
+  Slider *s = calloc(1, sizeof(Slider));;
+  s->parent = parent;
+  s->val = 0;
+  s->min = min;
+  s->max = max;
+  s->length = length;
+  if (wrap == 0) s->wrap = 0;
+  else s->wrap = 1;
+  if (horizontal == 0) s->horizontal = 0;
+  else s->horizontal = 1;
+  return s;
 }
 
-void draw_categories(ACscreen *s, Category categories[], int num_categories)
+int map(int val, int A, int B, int a, int b)
+{
+  return (val - A) * (b - a) / (B - A) + a;
+}
+
+void draw_slider(Slider *s)
 {
   int i;
-  int startX = 3;
-  int cursor_posX = startX;
-  int index = 0;
+  int ypos = s->start_y;
+  int xpos = s->start_x;
 
-  // Draw header
-  ac_changeColor(s, YL_BK);
-  ac_printCenter(s, 0, "CATEGORIES");
-  ac_changeColor(s, BL_BK);
-
-  // Draw categories
-  while (index < num_categories){
-    for (i = 1; i < s->height-1; i++){
-      if (index >= num_categories) goto done;
-      mvwaddch(s->win, i, cursor_posX, categories[index].key);
-      mvwaddstr(s->win, i, cursor_posX+2, categories[index].val);
-      index++;
-    }
-    cursor_posX += s->field_size;
+  // top bar
+  for (i = 0; i < s->length+2; i++){
+    if (i == 0 || i == s->length+1) mvwaddch(s->parent->win, ypos, xpos+i, '+');
+    else mvwaddch(s->parent->win, ypos, xpos+i, '-');
   }
 
-done:
-  return;
+  // bottom bar
+  for (i = 0; i < s->length+2; i++){
+    if (i == 0 || i == s->length+1) mvwaddch(s->parent->win, ypos+2, xpos+i, '+');
+    else mvwaddch(s->parent->win, ypos+2, xpos+i, '-');
+  }
+
+  // side bars
+  mvwaddch(s->parent->win, ypos+1, xpos, '|');
+  mvwaddch(s->parent->win, ypos+1, xpos+s->length+1, '|');
+
+  // middle bar
+  int size = map(s->val, s->min, s->max, 0, s->length);
+  for (i = 0; i < s->length; i++){
+    mvwaddch(s->parent->win, ypos+1, xpos+i+1, ' ');
+  }
+  for (i = 0; i < size; i++){
+    mvwaddch(s->parent->win, ypos+1, xpos+i+1, '=');
+  }
+
+  // label
+  mvwaddstr(s->parent->win, ypos+3, xpos, s->label);
+  mvwaddstr(s->parent->win, ypos+3, xpos+strlen(s->label), "   ");
+  wmove(s->parent->win, ypos+3, xpos+strlen(s->label));
+  wprintw(s->parent->win, "%d", s->val);
+
+  wrefresh(s->parent->win);
+}
+
+void draw_main(ACscreen *screen, Slider *RGB[])
+{
+  int i;
+
+  // sliders
+  for (i = 0; i < 3; i++){
+    Slider *slider = RGB[i];
+    ac_changeColor(screen, slider->color);
+    draw_slider(slider);
+    wrefresh(screen->win);
+  }
+
+  ACscreen *sHeader = ac_screenInit(3, H_SIZE, AC_YPOS, START_X);
+
+  // image
+  wrefresh(screen->win);
+}
+
+void draw_info(ACscreen *s, int speed, char ch)
+{
+  // Speed
+  if (speed == SPEED_SLOW) ac_changeColor(s, YL_BK);
+  mvwaddstr(s->win, s->start_yRel+1, s->start_xRel+2, "1: SPEED SLOW");
+  ac_changeColor(s, WH_BK);
+  if (speed == SPEED_MID) ac_changeColor(s, YL_BK);
+  mvwaddstr(s->win, s->start_yRel+2, s->start_xRel+2, "2: SPEED MEDIUM");
+  ac_changeColor(s, WH_BK);
+  if (speed == SPEED_FAST) ac_changeColor(s, YL_BK);
+  mvwaddstr(s->win, s->start_yRel+3, s->start_xRel+2, "3: SPEED FAST");
+  ac_changeColor(s, WH_BK);
+
+  // Colors
+  if (ch == 'y' || ch == 'u') ac_changeColor(s, RD_BK);
+  mvwaddstr(s->win, s->start_yRel+1, s->end_xRel*.33, "Y: Decrease Red");
+  mvwaddstr(s->win, s->start_yRel+1, s->end_xRel*.66, "U: Increase Red");
+  mvwaddstr(s->win, s->start_yRel+2, s->end_xRel*.33, "H: Decrease Green");
+  mvwaddstr(s->win, s->start_yRel+2, s->end_xRel*.66, "J: Increase Green");
+  mvwaddstr(s->win, s->start_yRel+3, s->end_xRel*.33, "N: Decrease Blue");
+  mvwaddstr(s->win, s->start_yRel+3, s->end_xRel*.66, "M: Increase Blue");
+
+  wrefresh(s->win);
+}
+
+void draw_image(ACscreen *s, Slider *RGB[])
+{
+  init_color(COLOR_MAGENTA, RGB[0]->val, RGB[1]->val, RGB[2]->val);
+  ac_changeColor(s, MG_BK);
+  refresh();
+  wrefresh(s->win);
+  ac_printCenter(s, 0, "MERRY CHRISTMAS");
+  ac_printCenter(s, 2, "*");
+  ac_printCenter(s, 3, "XXX");
+  ac_printCenter(s, 4, "XXXXXXX");
+  ac_printCenter(s, 5, "XXXXXXXXX");
+  ac_printCenter(s, 6, "XXXXXXX");
+  ac_printCenter(s, 7, "XXXXXXXXXXX");
+  ac_printCenter(s, 8, "XXXXXXXXXXXXXXX");
+  ac_printCenter(s, 9, "XXXXXXXXXXXXXXXXXXX");
+  ac_printCenter(s, 10, "XXXXXXXXXXXXXXX");
+  ac_printCenter(s, 11, "XXXXXXXXXXXXXXXXXXX");
+  ac_printCenter(s, 12, "XXXXXXXXXXXXXXXXXXXXX");
+  ac_printCenter(s, 13, "XXXXXXXXXXXXXXXXX");
+  ac_printCenter(s, 14, "XXXXXXXXXXX");
+  ac_printCenter(s, 14, "XXXXXXXXX");
+  ac_printCenter(s, 15, "#####");
+  ac_printCenter(s, 16, "#####");
+  ac_printCenter(s, 17, "#####");
+  ac_printCenter(s, 18, "         _*_    #####           __*__");
+  ac_printCenter(s, 19, "         |_|            -*-     |   |");
+  ac_printCenter(s, 20, "                        |_|     |___|");
+  wrefresh(s->win);
 }
 
 int main()
@@ -177,67 +190,82 @@ int main()
   ac_colorStart();
 
   // Initialize header screen
-  ACscreen *s_header = ac_screenInit(3, H_SIZE, AC_YPOS, START_X);
+  ACscreen *sHeader = ac_screenInit(3, H_SIZE, AC_YPOS, START_X);
+  ac_changeColor(sHeader, GR_BK);
 
-  // Initialize item screen
-  ACscreen *s_item = ac_screenInit(11, H_SIZE, AC_YPOS, START_X);
-  s_item->field_size = 20;
-  nodelay(s_item->win, TRUE);
-  keypad(s_item->win, TRUE);
+  // Initialize main screen
+  ACscreen *sMain = ac_screenInit(30, H_SIZE, AC_YPOS, START_X);
+  ac_drawBorder(sMain);
 
-  // Initialize categories screen
-  ACscreen *s_categories = ac_screenInit(8, H_SIZE, AC_YPOS, START_X);
-  s_categories->field_size = 23;
+  // Initialize info screen
+  ACscreen *sInfo = ac_screenInit(5, H_SIZE, sMain->end_y, START_X);
+  ac_drawBorder(sInfo);
 
-  // Example item
-  Item item = item_init("Computer XT", "Generic", "AC", "9382 9943 4324 32223",
-                        "study", "21 Feb 89",
-                        "Includes 1 year warranty",
-                        "$2,500.00", "$500.00", "5 years");
+  // Initialize image screen
+  ACscreen *sImage = ac_screenInit(sMain->height*0.75, sMain->width*0.5,
+                                   sMain->end_yRel*0.25, sMain->end_xRel*0.05);
+  ac_drawBorder(sImage);
 
-  // Categories
-  Category appliances; appliances.key = 'A'; strcpy(appliances.val, "Appliances");
-  Category automotive; automotive.key = 'B'; strcpy(automotive.val, "Automotive tool");
-  Category sporting;   sporting.key   = 'C'; strcpy(sporting.val,   "Sporting Equip");
-  Category software;   software.key   = 'D'; strcpy(software.val,   "Computer Swr");
-  Category hardware;   hardware.key   = 'E'; strcpy(hardware.val,   "Computer Hwr");
-  Category jewelry;    jewelry.key    = 'F'; strcpy(jewelry.val,    "Jewelry");
-  Category gardening;  gardening.key  = 'G'; strcpy(gardening.val,  "Gardening Equip");
-  Category warranty;   warranty.key   = 'W'; strcpy(warranty.val,   "Warranty");
-  Category nowarranty; nowarranty.key = 'X'; strcpy(nowarranty.val, "NO Warranty");
-  int num_categories = 9;
-  Category categories[num_categories];
-  categories[0] = appliances;
-  categories[1] = automotive;
-  categories[2] = sporting;
-  categories[3] = software;
-  categories[4] = hardware;
-  categories[5] = jewelry;
-  categories[6] = gardening;
-  categories[7] = warranty;
-  categories[8] = nowarranty;
+  // Create color sliders
+  int bar_offset = 5;
+  Slider *red = slider_init(sMain, 0, 255, SLIDER_LEN, 0, 1);
+  red->start_x = red->parent->end_xRel*.66;
+  red->start_y = red->parent->end_yRel*.15;
+  strcpy(red->label, "R: ");
+  red->color = RD_BK;
+  Slider *green = slider_init(sMain, 0, 255, SLIDER_LEN, 0, 1);
+  green->start_x = red->start_x;
+  green->start_y = red->start_y+bar_offset;
+  green->color = GR_BK;
+  strcpy(green->label, "G: ");
+  Slider *blue = slider_init(sMain, 0, 255, SLIDER_LEN, 0, 1);
+  blue->start_x = green->start_x;
+  blue->start_y = green->start_y+bar_offset;
+  blue->color = BL_BK;
+  strcpy(blue->label, "B: ");
 
-  ac_changeColor(s_categories, BL_BK);
-  ac_drawBorder(s_categories);
+  Slider *RGB[3];
+  RGB[0] = red;
+  RGB[1] = green;
+  RGB[2] = blue;
 
-  char input;
+  nodelay(stdscr, 1);
+  char ch;
+  int speed = SPEED_SLOW;
+  int i;
   do{
-    // Draw header screen
-    draw_header(s_header);
-    wrefresh(s_header->win);
+    attron(A_BOLD);
+    refresh();
 
-    // Draw item screen
-    ac_changeColor(s_item, BL_BK);
-    ac_drawBorder(s_item);
-    draw_item(s_item, item);
-    wrefresh(s_item->win);
+    // Input and logic
+    switch(ch){
+      case '1': speed = SPEED_SLOW; break;
+      case '2': speed = SPEED_MID; break;
+      case '3': speed = SPEED_FAST; break;
+      case 'y': red->val -= speed; break;
+      case 'u': red->val += speed; break;
+      case 'h': green->val -= speed; break;
+      case 'j': green->val += speed; break;
+      case 'n': blue->val -= speed; break;
+      case 'm': blue->val += speed; break;
+    }
+    for (i = 0; i < 3; i++){
+      if (RGB[i]->val > RGB[i]->max) RGB[i]->val = RGB[i]->max;
+      if (RGB[i]->val < 0)           RGB[i]->val = 0;
+    }
 
-    // Draw categories screen
-    ac_changeColor(s_categories, BL_BK);
-    draw_categories(s_categories, categories, num_categories);
-    ac_drawLineV(s_categories, 78, '|', 0);
-    wrefresh(s_categories->win);
-  } while (input != 'q');
+    // Header
+    draw_header(sHeader);
+
+    // Main
+    draw_main(sMain, RGB);
+
+    // Info
+    draw_info(sInfo, speed, ch);
+
+    // Image
+    draw_image(sImage, RGB);
+  } while ((ch = getch()) != 'q');
 
   ac_close();
 }
