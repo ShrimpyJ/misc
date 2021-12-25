@@ -11,7 +11,8 @@
 
 #define FIELD_SIZE   20
 #define MAXLEN       80
-#define SLIDER_LEN   24
+#define SLIDER_LEN   10
+#define SLIDER_WIDTH  7
 
 #define SPEED_FAST   16
 #define SPEED_MID     4
@@ -19,51 +20,12 @@
 
 #define INFO_COLOR "WH_BK"
 
-typedef struct slider {
-  ACscreen *parent;
-  int val;
-  int min;
-  int max;
-  int length;
-  int wrap;
-  int horizontal;
-  int start_y;
-  int start_x;
-  char label[80];
-  int color;
-} Slider;
-
-const char* IMAGE =
-"      ------\n\
-      |    |\n\
-           |\n\
-           |\n\
-           |\n\
-           |\n\
-           |\n\
-           |\n\
-    ========\n";
 
 void draw_header(ACscreen *s)
 {
   ac_changeColor(s, BL_BK); ac_printCenter(s, 0, "COLOR PICKER");
 
   wrefresh(s->win);
-}
-
-Slider *slider_init(ACscreen *parent, int min, int max, int length, int wrap, int horizontal)
-{
-  Slider *s = calloc(1, sizeof(Slider));;
-  s->parent = parent;
-  s->val = 0;
-  s->min = min;
-  s->max = max;
-  s->length = length;
-  if (wrap == 0) s->wrap = 0;
-  else s->wrap = 1;
-  if (horizontal == 0) s->horizontal = 0;
-  else s->horizontal = 1;
-  return s;
 }
 
 int map(int val, int A, int B, int a, int b)
@@ -77,36 +39,58 @@ void draw_slider(Slider *s)
   int ypos = s->start_y;
   int xpos = s->start_x;
 
-  // top bar
-  for (i = 0; i < s->length+2; i++){
-    if (i == 0 || i == s->length+1) mvwaddch(s->parent->win, ypos, xpos+i, '+');
-    else mvwaddch(s->parent->win, ypos, xpos+i, '-');
-  }
+  // Draw border if border=1
+  if (s->border){
+    ac_changeColor(s->parent, s->color_border);
 
-  // bottom bar
-  for (i = 0; i < s->length+2; i++){
-    if (i == 0 || i == s->length+1) mvwaddch(s->parent->win, ypos+2, xpos+i, '+');
-    else mvwaddch(s->parent->win, ypos+2, xpos+i, '-');
+    // top bar
+    for (i = 0; i < s->length+2; i++){
+      if (i == 0 || i == s->length+1) mvwaddch(s->parent->win, ypos, xpos+i, s->c);
+      else mvwaddch(s->parent->win, ypos, xpos+i, s->h);
+    }
+  
+    // bottom bar
+    for (i = 0; i < s->length+2; i++){
+      if (i == 0 || i == s->length+1) mvwaddch(s->parent->win, ypos+2, xpos+i, s->c);
+      else mvwaddch(s->parent->win, ypos+2, xpos+i, s->h);
+    }
+  
+    // side bars
+    mvwaddch(s->parent->win, ypos+1, xpos, s->v);
+    mvwaddch(s->parent->win, ypos+1, xpos+s->length+1, s->v);
   }
-
-  // side bars
-  mvwaddch(s->parent->win, ypos+1, xpos, '|');
-  mvwaddch(s->parent->win, ypos+1, xpos+s->length+1, '|');
+  else{  // Undo border offsets if no border before drawing middle bar
+    ypos--;
+    xpos--;
+  }
 
   // middle bar
+  ac_changeColor(s->parent, s->color_fill);
   int size = map(s->val, s->min, s->max, 0, s->length);
   for (i = 0; i < s->length; i++){
-    mvwaddch(s->parent->win, ypos+1, xpos+i+1, ' ');
+    mvwaddch(s->parent->win, ypos+1, xpos+i+1, s->empty);
   }
   for (i = 0; i < size; i++){
-    mvwaddch(s->parent->win, ypos+1, xpos+i+1, '=');
+    mvwaddch(s->parent->win, ypos+1, xpos+i+1, s->fill);
+  }
+
+  // Undo border offsets if no border before drawing label
+  if (!s->border){
+    ypos--;
+    xpos++;
   }
 
   // label
-  mvwaddstr(s->parent->win, ypos+3, xpos, s->label);
-  mvwaddstr(s->parent->win, ypos+3, xpos+strlen(s->label), "   ");
-  wmove(s->parent->win, ypos+3, xpos+strlen(s->label));
-  wprintw(s->parent->win, "%d", s->val);
+  ac_changeColor(s->parent, s->color_label);
+  if (s->label[0] != '\0'){
+    mvwaddstr(s->parent->win, ypos+3, xpos, s->label);
+    mvwaddstr(s->parent->win, ypos+3, xpos+strlen(s->label), "   ");
+    wmove(s->parent->win, ypos+3, xpos+strlen(s->label));
+    wprintw(s->parent->win, "%d", s->val);
+  }
+
+  // val
+  ac_changeColor(s->parent, s->color_val);
 
   wrefresh(s->parent->win);
 }
@@ -118,8 +102,7 @@ void draw_main(ACscreen *screen, Slider *RGB[])
   // sliders
   for (i = 0; i < 3; i++){
     Slider *slider = RGB[i];
-    ac_changeColor(screen, slider->color);
-    draw_slider(slider);
+    ac_sliderDraw(slider);
     wrefresh(screen->win);
   }
 
@@ -184,6 +167,15 @@ void draw_image(ACscreen *s, Slider *RGB[])
   wrefresh(s->win);
 }
 
+void construct_slider(Slider *s, int y, int x, char *label, int color_all, int print_val)
+{
+  s->start_y = y;
+  s->start_x = x;
+  strcpy(s->label, label);
+  ac_sliderColorAll(s, color_all);
+  s->print_val = print_val;
+}
+
 int main()
 {
   ac_init(0, 0);
@@ -198,7 +190,7 @@ int main()
   ac_drawBorder(sMain);
 
   // Initialize info screen
-  ACscreen *sInfo = ac_screenInit(5, H_SIZE, sMain->end_y, START_X);
+  ACscreen *sInfo = ac_screenInit(5, H_SIZE, AC_YPOS-1, START_X);
   ac_drawBorder(sInfo);
 
   // Initialize image screen
@@ -207,22 +199,24 @@ int main()
   ac_drawBorder(sImage);
 
   // Create color sliders
-  int bar_offset = 5;
-  Slider *red = slider_init(sMain, 0, 255, SLIDER_LEN, 0, 1);
-  red->start_x = red->parent->end_xRel*.66;
-  red->start_y = red->parent->end_yRel*.15;
-  strcpy(red->label, "R: ");
-  red->color = RD_BK;
-  Slider *green = slider_init(sMain, 0, 255, SLIDER_LEN, 0, 1);
-  green->start_x = red->start_x;
-  green->start_y = red->start_y+bar_offset;
-  green->color = GR_BK;
-  strcpy(green->label, "G: ");
-  Slider *blue = slider_init(sMain, 0, 255, SLIDER_LEN, 0, 1);
-  blue->start_x = green->start_x;
-  blue->start_y = green->start_y+bar_offset;
-  blue->color = BL_BK;
-  strcpy(blue->label, "B: ");
+  int bar_offset = SLIDER_WIDTH+3;
+  Slider *red = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH);
+  int tmpX = red->parent->end_xRel*.60;
+  int tmpY = red->parent->end_yRel*.15;
+  construct_slider(red, tmpY, tmpX, "R: ", RD_BK, 1);
+  red->isHorizontal = 0;
+
+  Slider *green = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH);
+  tmpX = red->start_x+bar_offset;
+  tmpY = red->start_y;
+  construct_slider(green, tmpY, tmpX, "G: ", GR_BK, 1);
+  green->isHorizontal = 0;
+
+  Slider *blue = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH);
+  tmpX = green->start_x+bar_offset;
+  tmpY = green->start_y;
+  construct_slider(blue, tmpY, tmpX, "B: ", BL_BK, 1);
+  blue->isHorizontal = 0;
 
   Slider *RGB[3];
   RGB[0] = red;
@@ -267,5 +261,5 @@ int main()
     draw_image(sImage, RGB);
   } while ((ch = getch()) != 'q');
 
-  ac_close();
+  ac_end();
 }
