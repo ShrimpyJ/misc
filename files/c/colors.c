@@ -20,9 +20,12 @@
 
 #define INFO_COLOR "WH_BK"
 
+
 void draw_header(ACscreen *s)
 {
   ac_changeColor(s, BL_BK); ac_printCenter(s, 0, "COLOR PICKER");
+
+  wrefresh(s->win);
 }
 
 int map(int val, int A, int B, int a, int b)
@@ -88,6 +91,8 @@ void draw_slider(Slider *s)
 
   // val
   ac_changeColor(s->parent, s->color_val);
+
+  wrefresh(s->parent->win);
 }
 
 void draw_main(ACscreen *screen, Slider *RGB[])
@@ -98,9 +103,13 @@ void draw_main(ACscreen *screen, Slider *RGB[])
   for (i = 0; i < 3; i++){
     Slider *slider = RGB[i];
     ac_sliderDraw(slider);
+    wrefresh(screen->win);
   }
 
-  ac_printTitle(screen);
+  ACscreen *sHeader = ac_screenInit(3, H_SIZE, AC_YPOS, START_X);
+
+  // image
+  wrefresh(screen->win);
 }
 
 void draw_info(ACscreen *s, int speed, char ch)
@@ -124,12 +133,16 @@ void draw_info(ACscreen *s, int speed, char ch)
   mvwaddstr(s->win, s->start_yRel+2, s->end_xRel*.66, "J: Increase Green");
   mvwaddstr(s->win, s->start_yRel+3, s->end_xRel*.33, "N: Decrease Blue");
   mvwaddstr(s->win, s->start_yRel+3, s->end_xRel*.66, "M: Increase Blue");
+
+  wrefresh(s->win);
 }
 
 void draw_image(ACscreen *s, Slider *RGB[])
 {
   init_color(COLOR_MAGENTA, RGB[0]->val, RGB[1]->val, RGB[2]->val);
   ac_changeColor(s, MG_BK);
+  refresh();
+  wrefresh(s->win);
   ac_printCenter(s, 0, "MERRY CHRISTMAS");
   ac_printCenter(s, 2, "*");
   ac_printCenter(s, 3, "XXX");
@@ -151,6 +164,7 @@ void draw_image(ACscreen *s, Slider *RGB[])
   ac_printCenter(s, 18, "         _*_    #####           __*__");
   ac_printCenter(s, 19, "         |_|            -*-     |   |");
   ac_printCenter(s, 20, "                        |_|     |___|");
+  wrefresh(s->win);
 }
 
 void construct_slider(Slider *s, int y, int x, char *label, int color_all, int print_val)
@@ -213,10 +227,6 @@ int main()
   char ch;
   int speed = SPEED_SLOW;
   int i;
-
-  // Set titles
-  ac_setTitle(sMain, "MAIN", YL_BK, CENTER, 0);
-
   do{
     attron(A_BOLD);
     refresh();
@@ -249,13 +259,6 @@ int main()
 
     // Image
     draw_image(sImage, RGB);
-
-    int arr[3] = { RD_BK, GR_BK, BL_BK };
-
-    wrefresh(sHeader->win);
-    wrefresh(sMain->win);
-    wrefresh(sInfo->win);
-    wrefresh(sImage->win);
   } while ((ch = getch()) != 'q');
 
   ac_end();

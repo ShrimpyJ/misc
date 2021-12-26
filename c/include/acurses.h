@@ -22,6 +22,11 @@
 
 #define CMAX     80    // Max char array length
 
+#define LEFT    0
+#define CENTER  1
+#define MIDDLE  1
+#define RIGHT   2
+
 // Updates every time a new window is created.
 // If passed into ac_screenInit() in place of start_y,
 // allows new window to be placed directly below
@@ -57,6 +62,11 @@ typedef struct ac_screen {
   int end_yRel, end_xRel;
   int color_pair;
   int field_size;
+
+  char title[CMAX];  // Must be set manually
+  int title_color;   // Defaults to WH_BK
+  int title_pos;     // LEFT=0  MIDDLE=1  RIGHT=0 defaults to MIDDLE
+  int title_offset;  // Only for LEFT or RIGHT defaults to 0
 } ACscreen;
 
 /*
@@ -125,6 +135,12 @@ void ac_drawLineH(ACscreen *s, int y, char c, int overwrite_border);
 void ac_drawLineV(ACscreen *s, int x, char c, int overwrite_border);
 int ac_printCenter(ACscreen *s, int y, char *str);
 int ac_printRight(ACscreen *s, int y, char *str, int offset);
+void ac_rainbow(ACscreen *s, int y, int x, char *str, int colors[], int ncolors);
+void ac_printSpace(ACscreen *s, int y, int x, char *str, int n);
+void ac_printV(ACscreen *s, int  y, int x, char *str);
+void ac_printSpaceV(ACscreen *s, int y, int x, char *str, int n);
+void ac_setTitle(ACscreen *s, char *name, int color, int pos, int offset);
+void ac_printTitle(ACscreen *s);
 
 // Initialize and destroy functions
 void ac_init(int echo, int newline_mode);

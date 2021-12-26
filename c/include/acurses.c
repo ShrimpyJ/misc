@@ -5,6 +5,13 @@
 
 int AC_YPOS = 0;
 
+// Rounds up if an odd length
+int get_middle(int len)
+{
+  if (len % 2 == 0) return len / 2;
+  else return len / 2 + 1;
+}
+
 // Initialize a new screen with relevant info.
 // Pass AC_YPOS in place of start_y to have
 // the new window be placed directly below
@@ -18,24 +25,32 @@ ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
   s->height = height;
   s->width = width;
 
+  // Positions relative to the entire program (stdscr)
   s->start_y = start_y;
   s->start_x = start_x;
   s->end_y = s->start_y + s->height;
   s->end_x = s->start_x + s->width;
-  s->mid_y = s->end_y / 2;
-  s->mid_x = s->end_x / 2;
+  s->mid_y = get_middle(s->end_y);
+  s->mid_x = get_middle(s->end_x);
 
+  // Positions relative to the window only
   s->start_yRel = 0;
   s->start_xRel = 0;
   s->end_yRel = s->height-1;
   s->end_xRel = s->width-1;
-  s->mid_yRel = s->end_yRel / 2;
-  s->mid_xRel = s->end_xRel / 2;
+  s->mid_yRel = s->start_y + s->mid_y;
+  s->mid_xRel = s->start_x + s->mid_x;
+  s->mid_xRel = get_middle(s->width);
 
   WINDOW *win = newwin(height, width, start_y, start_x);
   AC_YPOS += s->height;
   s->win = win;
   s->color_pair = WH_BK;
+
+  s->title[0] = '\0';
+  s->title_color = WH_BK;
+  s->title_pos = CENTER;
+  s->title_offset = 0;
   return s;
 }
 
@@ -207,7 +222,7 @@ void ac_drawLineV(ACscreen *s, int x, char c, int overwrite_border)
 // Print a string in the middle of the screen of row y
 int ac_printCenter(ACscreen *s, int y, char *str)
 {
-  int middle = s->width / 2;
+  int middle = get_middle(s->width);
   int pos = middle - strlen(str) / 2;
   mvwaddstr(s->win, y, pos, str);
 }
@@ -222,6 +237,78 @@ int ac_printRight(ACscreen *s, int y, char *str, int offset)
   int right = s->width - offset;
   int pos = right - strlen(str);
   mvwaddstr(s->win, y, pos, str);
+}
+
+// Print a string at the desired position, cycling through colors
+// to allow for easy multicolored text.
+void ac_rainbow(ACscreen *s, int y, int x, char *str, int colors[], int ncolors)
+{
+  int i;
+  for (i = 0; i < strlen(str); i++){
+    ac_changeColor(s, colors[i % ncolors]);
+    mvwaddch(s->win, y, x+i, str[i]);
+  }
+}
+
+// Print a string with n spaces between each character
+void ac_printSpace(ACscreen *s, int y, int x, char *str, int n)
+{
+  int i;
+  int offset = 0;
+  for (i = 0; i < strlen(str); i++){
+    mvwaddch(s->win, y, x+i+offset, str[i]);
+    offset += n;
+  }
+}
+
+// Print a string vertically downwards
+void ac_printV(ACscreen *s, int  y, int x, char *str)
+{
+  int i;
+  for (i = 0; i < strlen(str); i++){
+    mvwaddch(s->win, y+i, x, str[i]);
+  }
+}
+
+// Print a string vertically downwards with n spaces between each character
+void ac_printSpaceV(ACscreen *s, int y, int x, char *str, int n)
+{
+  int i;
+  int offset = 0;
+  for (i = 0; i < strlen(str); i++){
+    mvwaddch(s->win, y+i+offset, x, str[i]);
+    offset += n;
+  }
+}
+
+void ac_setTitle(ACscreen *s, char *name, int color, int pos, int offset)
+{
+  memset(s->title, 0, CMAX);
+  strncpy(s->title, name, strlen(name));
+  s->title_color = color;
+  s->title_pos = pos;
+  s->title_offset = offset;
+}
+
+// Prints screen title in center of screen's top row
+void ac_printTitle(ACscreen *s)
+{
+  ac_changeColor(s, s->title_color);
+  if (s->title_pos == LEFT) mvwaddstr(s->win, 0, 0+s->title_offset, s->title);
+  else if (s->title_pos == CENTER) ac_printCenter(s, 0, s->title);
+  else ac_printRight(s, 0, s->title, s->title_offset);
+}
+
+// Prints screen title to on first row at xpos=0+offset
+void ac_printTitleL(ACscreen *s, int offset)
+{
+  mvwaddstr(s->win, 0, 0+offset, s->title);
+}
+
+// Prints screen title to on first row at right-offset
+void ac_printTitleR(ACscreen *s, int offset)
+{
+  ac_printRight(s, 0, s->title, offset);
 }
 
 // There is no need to call this since it's called by ac_colorStart()
