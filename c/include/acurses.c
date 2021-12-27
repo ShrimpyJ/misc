@@ -12,6 +12,8 @@ int get_middle(int len)
   else return len / 2 + 1;
 }
 
+
+////////////////////// Screen ///////////////////////////////
 // Initialize a new screen with relevant info.
 // Pass AC_YPOS in place of start_y to have
 // the new window be placed directly below
@@ -42,22 +44,102 @@ ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
   s->mid_xRel = s->start_x + s->mid_x;
   s->mid_xRel = get_middle(s->width);
 
-  WINDOW *win = newwin(height, width, start_y, start_x);
+  s->win = newwin(height, width, start_y, start_x);
   AC_YPOS += s->height;
-  s->win = win;
-  s->color_pair = WH_BK;
+  s->color = WH_BK;
 
+  // Set default title settings
   s->title[0] = '\0';
   s->title_color = WH_BK;
   s->title_pos = CENTER;
   s->title_offset = 0;
+
+  // Set default highlight settings
+  s->hl_color = BK_WH;
+  s->hl_line = 0;      // Set to 1 to highlight entire screen minus border
+  s->hl_forward = 0;   // Constant. Set to always highlight n spaces forward
+  s->hl_backward = 0;  // Constant. Set to always highlight n spaces backward
+
+  // Set default border settings
+  s->has_border = 1;
+  s->border_color = WH_BK;
+  //s->h = LINE_H;
+  //s->v = LINE_V;
+  //s->tl = LINE_TL;
+  //s->tr = LINE_TR;
+  //s->bl = LINE_BL;
+  //s->br = LINE_BR;
+
+  // Set default menu settings
+  s->nitems = 0;
+  s->items = calloc(1, sizeof(char *));
+  s->cur_item = 0;
+  s->item_x = s->item_y = 1;
+
   return s;
 }
 
+// Changes the color pair stored in a screen and updates the window
+// Pass in an enum pair such as BL_BK for blue text on black background
+void ac_changeColor(ACscreen *s, int pair)
+{
+  wattroff(s->win, COLOR_PAIR(s->color));
+  wattron(s->win, COLOR_PAIR(pair));
+}
+
+// Set all title settings. pos can be LEFT, CENTER/MIDDLE, or RIGHT.
+// Offset only applies to LEFT or RIGHT.
+void ac_setTitle(ACscreen *s, char *name, int color, int pos, int offset)
+{
+  memset(s->title, 0, CMAX);
+  strncpy(s->title, name, strlen(name));
+  s->title_color = color;
+  s->title_pos = pos;
+  s->title_offset = offset;
+}
+
+// Erase a title. Calls to ac_drawTitle() will
+// instantly return if no title exists.
+void ac_unsetTitle(ACscreen *s)
+{
+  memset(s->title, 0, CMAX);
+}
+
+// Unset a border. Calls to ac_drawBorder() will
+// instantly return if no border exists.
+void ac_unsetBorder(ACscreen *s)
+{
+  s->has_border = 0;
+}
+
+// Draw screen title in center of screen's top row.
+// Overlaps the top border by default if border is set.
+// Will return if no title is set.
+void ac_drawTitle(ACscreen *s)
+{
+  if (s->title[0] == '\0') return;
+  ac_changeColor(s, s->title_color);
+  if (s->title_pos == LEFT) mvwaddstr(s->win, 0, 0+s->title_offset, s->title);
+  else if (s->title_pos == CENTER) ac_printCenter(s, 0, s->title);
+  else ac_printRight(s, 0, s->title, s->title_offset);
+  ac_changeColor(s, s->color);
+}
+
+// Draws a default curses border set to the screen's color.
+// For custom ASCII borders, use ac_drawBorderCh()
+void ac_drawBorder(ACscreen *s)
+{
+  if (!s->has_border) return;
+  ac_changeColor(s, s->border_color);
+  wborder(s->win, 0, 0, 0, 0, 0, 0, 0, 0);
+  ac_changeColor(s, s->color);
+}
+
 /*
-  Draws a border on the outer edges of the screen's window.
-  Border characters are the defaults defined in the file opening.
-  For alternate border drawing, use ac_drawBorderCh() below.
+  Draws a custom border on the outer edges of the screen's window.
+  Border characters are the defaults defined in the header file.
+  A screen must have has_border set for the border to be draw.
+  It is set by default and can be unset with ac_unsetBorder().
 
   Example of a default border for an 8x5 window:
   +------+
@@ -69,67 +151,131 @@ ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
   Drawing a border is nice but also requires some attention when drawing
   text to avoid colliding with it. Pay attention to offsets.
 */
-void ac_drawBorder(ACscreen *s)
+void ac_drawBorderCh(ACscreen *s)
 {
   int i, j;
-  va_list valist;
-  char ch = LINE_H;
-  char cv = LINE_V;
-  char cc = LINE_C;
+  int h = s->h;
+  int v = s->v;
+  int tl = s->tl;
+  int tr = s->tr;
+  int bl = s->bl;
+  int br = s->br;
+
+  if (!s->has_border) return;
 
   for (i = 0; i < s->height; i++){
     for (j = 0; j < s->width; j++){
       // Draw corners
-      if (i == 0           && j == 0 || i == 0           && j == s->width-1 ||
-          i == s->height-1 && j == 0 || i == s->height-1 && j == s->width-1)
-        mvwaddch(s->win, i, j, cc);
+      if      (i == 0 && j == 0) mvwaddch(s->win, i, j, tl);
+      else if (i == 0 && j == s->width-1) mvwaddch(s->win, i, j, tr);
+      else if (i == s->height-1 && j == 0) mvwaddch(s->win, i, j, bl);
+      else if (i == s->height-1 && j == s->width-1) mvwaddch(s->win, i, j, br);
 
-      else if (i == 0) mvwaddch(s->win, i, j, ch);            // Top border
-      else if (i == s->height-1) mvwaddch(s->win, i, j, ch);  // Bottom border
+      else if (i == 0) mvwaddch(s->win, i, j, h);            // Top border
+      else if (i == s->height-1) mvwaddch(s->win, i, j, h);  // Bottom border
 
-      else if (j == 0) mvwaddch(s->win, i, j, cv);            // Left border
-      else if (j == s->width-1) mvwaddch(s->win, i, j, cv);   // Right border
+      else if (j == 0) mvwaddch(s->win, i, j, v);            // Left border
+      else if (j == s->width-1) mvwaddch(s->win, i, j, v);   // Right border
     }
   }
+
+  ac_changeColor(s, s->color);
 }
 
-/*
-  Identical to ac_drawBorder() but allows you to pass alternate characters
-  to draw the border (horizontal, vertical, corner).
+// Set starting position of a menu's item list
+void ac_itemStart(ACscreen *s, int y, int x)
+{
+  s->item_y = y;
+  s->item_x = x;
+}
 
-  Ex. passing ('0', '+', 'x') will draw the following border for an 8x5 window:
-  x000000x
-  +      +
-  +      +
-  +      +
-  x000000x
+// Add a string to the end of a menu's item list
+void ac_addItem(ACscreen *s, const char *str)
+{
+  s->nitems++;
+  s->items = (char **) realloc(s->items, s->nitems * sizeof(*s->items));
+  s->items[s->nitems-1] = (char *) calloc(1, sizeof(char)*strlen(str)+1);
+  strncpy(s->items[s->nitems-1], str, strlen(str));
+}
 
-  Drawing a border is nice but also requires some attention when drawing
-  text to avoid colliding with it. Pay attention to offsets.
-*/
-void ac_drawBorderCh(ACscreen *s, char horizontal, char vertical, char corner)
+// Highlight a line based on screen's highlight settings
+void ac_highlight(ACscreen *s, int y, int x)
+{
+  int i;
+
+
+  if (!s->hl_line && !s->hl_forward && !s->hl_backward) return;
+
+  ac_changeColor(s, s->hl_color);
+
+  if (s->hl_line){
+    for (i = 1; i < s->width-1; i++){
+      mvwaddch(s->win, y, i, ' ');
+    }
+    ac_changeColor(s, s->color);
+    return;
+  }
+
+  if (s->hl_forward > 0){
+    for (i = 0; i < s->hl_forward; i++){
+      mvwaddch(s->win, y, x+i, ' ');
+    }
+  }
+
+  if (s->hl_backward > 0){
+    for (i = 0; i < s->hl_backward; i++){
+      mvwaddch(s->win, y, x-i-1, ' ');
+    }
+  }
+
+  ac_changeColor(s, s->color);
+}
+
+void ac_drawMenu(ACscreen *s)
 {
   int i, j;
-  char ch = horizontal;
-  char cv = vertical;
-  char cc = corner;
+  int offset = 0;
 
-  for (i = 0; i < s->height; i++){
-    for (j = 0; j < s->width; j++){
-      // Draw corners
-      if (i == 0           && j == 0 || i == 0           && j == s->width-1 ||
-          i == s->height-1 && j == 0 || i == s->height-1 && j == s->width-1)
-        mvwaddch(s->win, i, j, cc);
+  for (i = 0; i < s->nitems; i++){
+    char *str = s->items[i];
 
-      else if (i == 0) mvwaddch(s->win, i, j, ch);            // Top border
-      else if (i == s->height-1) mvwaddch(s->win, i, j, ch);  // Bottom border
-
-      else if (j == 0) mvwaddch(s->win, i, j, cv);            // Left border
-      else if (j == s->width-1) mvwaddch(s->win, i, j, cv);   // Right border
+    // Truncate names which are too long for the menu
+    if (strlen(s->items[i]) > s->width){
+      char tmp[strlen(str)];
+      if (s->has_border) strncpy(tmp, str, s->width-5);
+      else strncpy(tmp, str, s->width-3);
+      memset(str, 0, strlen(str));
+      strncpy(str, tmp, strlen(tmp));
+      strncat(str, "...", 3);
     }
+
+    // Draw current menu item highlighted
+    if (i == s->cur_item){
+      ac_highlight(s, s->item_y+i+offset, s->item_x);
+      ac_changeColor(s, s->hl_color);
+      mvwaddstr(s->win, s->item_y+i+offset, s->item_x, str);
+      ac_changeColor(s, s->color);
+      continue;
+    }
+
+    // Draw other menu items unhighlighted
+    mvwaddstr(s->win, s->item_y+i+offset, s->item_x, str);
+    if (strlen(str) > s->width) offset++;
   }
 }
 
+void ac_itemNext(ACscreen *s)
+{
+  s->cur_item = (s->cur_item + 1) % s->nitems;
+}
+
+void ac_itemPrev(ACscreen *s)
+{
+  s->cur_item--;
+  if (s->cur_item < 0) s->cur_item = s->nitems-1;
+}
+
+////////////////////// Print /////////////////////////////
 /*
   Prints a string at position x,y.
   Then, pads the characters after the string
@@ -180,15 +326,6 @@ void ac_printFields(ACscreen *s, int y, int x, int field_size, char *fields[], i
   for (i = 0; i < nfields; i++){
     ac_printField(s, y, cursorPosX+(field_size*i), field_size, fields[i]);
   }
-}
-
-// Changes the color pair stored in a screen and updates the window
-// Pass in an enum pair such as BL_BK for blue text on black background
-void ac_changeColor(ACscreen *s, int pair)
-{
-  wattroff(s->win, COLOR_PAIR(s->color_pair));
-  wattron(s->win, COLOR_PAIR(pair));
-  s->color_pair = pair;
 }
 
 // Draw a horizontal line across row y using character c.
@@ -281,36 +418,159 @@ void ac_printSpaceV(ACscreen *s, int y, int x, char *str, int n)
   }
 }
 
-void ac_setTitle(ACscreen *s, char *name, int color, int pos, int offset)
+
+///////////////////// Slider ////////////////////////////////
+// Initialize a slider with parameters and default values
+ACslider *ac_sliderInit(ACscreen *parent, int min, int max, int length, int width, int start_y, int start_x)
 {
-  memset(s->title, 0, CMAX);
-  strncpy(s->title, name, strlen(name));
-  s->title_color = color;
-  s->title_pos = pos;
-  s->title_offset = offset;
+  // Set necessary values based on parameters
+  ACslider *s = calloc(1, sizeof(ACslider));;
+  s->parent = parent;
+  s->min = min;
+  s->max = max;
+  s->length = length;
+  s->width = width+2;
+  s->start_y = start_y;
+  s->start_x = start_x;
+
+  // Set default values (must be changed manually)
+  s->val = 0;
+  s->border = 1;
+  s->orientation = SLIDER_H;
+  s->label[0] = '\0';
+  s->color_fill = s->color_border = s->color_label = s->color_val = WH_BK;
+  s->h = '-';
+  s->v = '|';
+  s->c = '+';
+  s->empty = ' ';
+  s->fill = '=';
+  s->wrap = 0;
+  s->print_val = 0;
+
+  return s;
 }
 
-// Prints screen title in center of screen's top row
-void ac_printTitle(ACscreen *s)
+void ac_sliderSetLabel(ACslider *s, const char *str)
 {
-  ac_changeColor(s, s->title_color);
-  if (s->title_pos == LEFT) mvwaddstr(s->win, 0, 0+s->title_offset, s->title);
-  else if (s->title_pos == CENTER) ac_printCenter(s, 0, s->title);
-  else ac_printRight(s, 0, s->title, s->title_offset);
+  memset(s->label, 0, CMAX);
+  strncpy(s->label, str, strlen(str));
 }
 
-// Prints screen title to on first row at xpos=0+offset
-void ac_printTitleL(ACscreen *s, int offset)
+void ac_sliderSetPos(ACslider *s, int y, int x)
 {
-  mvwaddstr(s->win, 0, 0+offset, s->title);
+  s->start_y = s->parent->start_y + y;
+  s->start_x = s->parent->start_x + x;
 }
 
-// Prints screen title to on first row at right-offset
-void ac_printTitleR(ACscreen *s, int offset)
+// Set every color option in the slider
+void ac_sliderColorAll(ACslider *s, int color)
 {
-  ac_printRight(s, 0, s->title, offset);
+  s->color_fill = s->color_border = s->color_label = s->color_val = color;
 }
 
+// Draw a slider at its position in its parent window
+void ac_sliderDraw(ACslider *s)
+{
+  int i, j;
+  int start_y, start_x;  // Relative to stdscr
+  int end_y, end_x;
+  start_y = s->parent->start_y + s->start_y;
+  start_x = s->parent->start_x + s->start_x;
+
+  ac_changeColor(s->parent, s->color_border);
+
+  // Draw border by creating subwindow in parent
+  delwin(s->win);
+  if (s->orientation == SLIDER_H){
+    end_y = s->width;
+    end_x = s->length;
+  }
+  else{
+    end_y = s->length;
+    end_x = s->width;
+  }
+  s->win = subwin(s->parent->win, end_y, end_x, start_y, start_x);
+  wborder(s->win, 0, 0, 0, 0, 0, 0, 0, 0);
+
+  // Label relative to parent window
+  if (s->label[0] != '\0'){
+    ac_changeColor(s->parent, s->color_label);
+    mvwaddstr(s->parent->win, s->start_y+end_y, s->start_x, s->label);
+    mvwaddstr(s->parent->win, s->start_y+end_y, s->start_x, s->label);
+  }
+
+  // Value relative to label
+  if (s->print_val){
+    ac_changeColor(s->parent, s->color_val);
+    mvwaddstr(s->parent->win, s->start_y+end_y, s->start_x+strlen(s->label), "                ");
+    mvwprintw(s->parent->win, s->start_y+end_y, s->start_x+strlen(s->label), "%d", s->val);
+  }
+
+  int ypos = s->start_y-2;
+  int xpos = s->start_x;
+  int size = (s->val - s->min) * (s->length-2) / (s->max - s->min);
+  
+  // redraw empty first
+  for (i = 0; i < s->length-2; i++){
+    for (j = 0; j < s->width-2; j++){
+      if (s->orientation == SLIDER_H) mvwaddch(s->parent->win, ypos+j+3, xpos+i+1, s->empty);
+      else                            mvwaddch(s->parent->win, ypos+s->length-i, xpos+j+1, s->empty);
+    }
+  }
+
+  // draw fill
+  for (i = 0; i < size; i++){
+    for (j = 0; j < s->width-2; j++){
+      if (s->orientation == SLIDER_H) mvwaddch(s->parent->win, ypos+j+3, xpos+i+1, s->fill);
+      else                            mvwaddch(s->parent->win, ypos+s->length-i, xpos+j+1, s->fill);
+    }
+  }
+
+  ac_changeColor(s->parent, s->parent->color);
+}
+
+////////////////// Menu /////////////////////////
+ACmenu *ac_menuInit(ACscreen *parent, int height, int width, int start_y, int start_x)
+{
+  ACmenu *m = calloc(1, sizeof(ACmenu));
+  m->nitems = 0;
+
+  m->border_color = WH_BK;
+  m->color = WH_BK;
+
+  m->title[0] = '\0';
+  m->title_color = WH_BK;
+  m->title_pos = CENTER;
+  m->title_offset = 0;
+
+  m->win = newwin(height, width, start_y, start_x);
+  return m;
+}
+
+void ac_menuSetTitle(ACmenu *m, char *name, int color, int pos, int offset)
+{
+  memset(m->title, 0, CMAX);
+  strncpy(m->title, name, strlen(name));
+  m->title_color = color;
+  m->title_pos = pos;
+  m->title_offset = offset;
+}
+
+void ac_menuAddItem(ACmenu *m, char *item)
+{
+  m->nitems++;
+}
+
+void ac_menuDraw(ACmenu *m)
+{
+  int i;
+//  ac_changeColor(m->parent, m->border_color);
+  wborder(m->win, 0, 0, 0, 0, 0, 0, 0, 0);
+//  ac_changeColor(m->parent, m->color);
+}
+
+
+////////////// Initialize, Destroy, Refresh ///////////////////
 // There is no need to call this since it's called by ac_colorStart()
 // Initialize the color pairs found in the COLORS enum.
 // Two color pairs per line to save vertical space.
@@ -366,143 +626,37 @@ void ac_colorStart()
   ac_colorPairsInit();
 }
 
-// Initialize a slider with parameters and default values;
-Slider *ac_sliderInit(ACscreen *parent, int min, int max, int length, int width)
+// Redraw all screen properties (if they are set).
+void ac_refresh(ACscreen *s)
 {
-  // Set necessary values based on parameters
-  Slider *s = calloc(1, sizeof(Slider));;
-  s->parent = parent;
-  s->min = min;
-  s->max = max;
-  s->length = length;
-  s->width = width;
-
-  // Set default values (must be changed manually)
-  s->val = 0;
-  s->start_y = s->start_x = 0;
-  s->border = 1;
-  s->isHorizontal = 1;
-  s->label[0] = '\0';
-  s->color_fill = s->color_border = s->color_label = s->color_val = WH_BK;
-  s->h = '-';
-  s->v = '|';
-  s->c = '+';
-  s->empty = ' ';
-  s->fill = '=';
-  s->wrap = 0;
-  s->print_val = 0;
-  return s;
+  ac_drawMenu(s);
+  ac_drawBorder(s);
+  ac_drawTitle(s);
+  wrefresh(s->win);
 }
 
-void ac_sliderSetLabel(Slider *s, const char *str)
+char ac_getch(ACscreen *s)
 {
-  memset(s->label, 0, CMAX);
-  strncpy(s->label, str, strlen(str));
-}
-
-// Set every color option in the slider
-void ac_sliderColorAll(Slider *s, int color)
-{
-  s->color_fill = s->color_border = s->color_label = s->color_val = color;
-}
-
-// Draw a slider at its position in its parent window
-void ac_sliderDraw(Slider *s)
-{
-  int i, j;
-  int ypos = s->start_y;
-  int xpos = s->start_x;
-  int maxV, maxH;
-
-  if (s->isHorizontal){
-    maxH = s->width+1;
-    maxV = s->length+1;
-  }
-  else{
-    maxH = s->length+1;
-    maxV = s->width+1;
-  }
-
-  // Draw border if border=1
-  if (s->border){
-    ac_changeColor(s->parent, s->color_border);
-
-    // corners
-    mvwaddch(s->parent->win, s->start_y, s->start_x, s->c);
-    mvwaddch(s->parent->win, s->start_y, s->start_x+maxV, s->c);
-    mvwaddch(s->parent->win, s->start_y+maxH, s->start_x, s->c);
-    mvwaddch(s->parent->win, s->start_y+maxH, s->start_x+maxV, s->c);
-
-    // top and bottom bars
-    for (i = 1; i < maxV; i++){
-      mvwaddch(s->parent->win, s->start_y, s->start_x+i, s->h);
-      mvwaddch(s->parent->win, s->start_y+maxH, s->start_x+i, s->h);
-    }
-
-    // left and right bars
-    for (i = 1; i < maxH; i++){
-      mvwaddch(s->parent->win, s->start_y+i, s->start_x, s->v);
-      mvwaddch(s->parent->win, s->start_y+i, s->start_x+maxV, s->v);
-    }
-  }
-  else{  // Undo border offsets if no border before drawing middle bar
-    ypos--;
-    xpos--;
-  }
-
-  // middle bar
-  ac_changeColor(s->parent, s->color_fill);
-  int size = (s->val - s->min) * (s->length) / (s->max - s->min);
-  // redraw empty first
-  for (i = 0; i < s->length; i++){
-    for (j = 0; j < s->width; j++){
-      if (s->isHorizontal) mvwaddch(s->parent->win, ypos+j+1, xpos+i+1, s->empty);
-      else                 mvwaddch(s->parent->win, ypos+i+1, xpos+j+1, s->empty);
-    }
-  }
-  // draw fill
-  for (i = 0; i < size; i++){
-    for (j = 0; j < s->width; j++){
-      if (s->isHorizontal) mvwaddch(s->parent->win, ypos+j+1, xpos+i+1, s->fill);
-      else                 mvwaddch(s->parent->win, ypos+s->length-i, xpos+j+1, s->fill);
-    }
-  }
-
-  // Undo border offsets if no border before drawing label
-  if (!s->border){
-    ypos--;
-    xpos++;
-  }
-
-  // label
-  ypos += maxH+1;
-  if (s->label[0] != '\0'){
-    ac_changeColor(s->parent, s->color_label);
-    mvwaddstr(s->parent->win, ypos, xpos, s->label);
-    xpos += strlen(s->label);
-  }
-
-  // val
-  if (s->print_val){
-    ac_changeColor(s->parent, s->color_val);
-    mvwprintw(s->parent->win, ypos, xpos, "%d", s->val);
-  }
-
-  wrefresh(s->parent->win);
+  char ch = wgetch(s->win);
+  ac_refresh(s);
+  return ch;
 }
 
 // Doesn't need to be used, only initializes
-// ncurses with basic values. Pass in 0 for echo
-// to not have input echo back to the screen.
-// Pass 0 in for newline_mode to not have key presses
-// immediately be processed (i.e. wait until newline).
-void ac_init(int echo, int newline_mode)
+// ncurses with basic values such as instant
+// keyboard feedback (no RETURN needed) and
+// no echoing of keys back to the display.
+// Also initializes the acurses colors for
+// you so no need to call ac_colorStart().
+void ac_init()
 {
   initscr();
-  if (!newline_mode) cbreak();
+  cbreak();
   keypad(stdscr, TRUE);
-  if (!echo) noecho();
+  noecho();
+  nodelay(stdscr, 1);
   curs_set(0);
+  ac_colorStart();
   clear();
 }
 

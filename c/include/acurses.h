@@ -16,9 +16,12 @@
 */
 
 // Default characters for drawing a border
-#define LINE_V    '|'  // Vertical border
 #define LINE_H    '-'  // Horizontal border
-#define LINE_C    '+'  // Corner
+#define LINE_V    '|'  // Vertical border
+#define LINE_TL   '┌'  // Corner top left
+#define LINE_TR   '┐'  // Corner top right
+#define LINE_BL   '└'  // Corner bot left
+#define LINE_BR   '┘'  // Corner bot right
 
 #define CMAX     80    // Max char array length
 
@@ -26,6 +29,10 @@
 #define CENTER  1
 #define MIDDLE  1
 #define RIGHT   2
+
+#define SLIDER_V   0
+#define SLIDER_H   1
+
 
 // Updates every time a new window is created.
 // If passed into ac_screenInit() in place of start_y,
@@ -53,6 +60,7 @@ extern enum AC_COLOR { WH_WH, BL_WH, BK_WH, GR_WH, CY_WH, YL_WH, RD_WH, MG_WH,
 typedef struct ac_screen {
   WINDOW *win;
   int height, width;
+
   int start_y, start_x;        // Absolute coordinates
   int mid_y, mid_x;
   int end_y, end_x;
@@ -60,13 +68,49 @@ typedef struct ac_screen {
   int start_yRel, start_xRel;  // Relative coordinates
   int mid_yRel, mid_xRel;
   int end_yRel, end_xRel;
-  int color_pair;
+
+  int color;
   int field_size;
 
-  char title[CMAX];  // Must be set manually
+  // Screen title settings (set with ac_setTitle())
+  // Title is NULL by default and can only be drawn
+  // if set. When set, draw it with ac_drawTitle().
+  char title[CMAX];  // Defaults to NULL
   int title_color;   // Defaults to WH_BK
   int title_pos;     // LEFT=0  MIDDLE=1  RIGHT=0 defaults to MIDDLE
   int title_offset;  // Only for LEFT or RIGHT defaults to 0
+
+  // Screen border settings (change with ac_setBorder())
+  // By default, a border is created when ac_screenInit()
+  // is called. The border must still be drawn with 
+  // ac_drawBorder()  or ac_drawBorderCh() to be seen however.
+  // A border can be removed with ac_unsetBorder().
+  // An unset border will not be drawn even when 
+  // ac_drawBorder() or ac_drawBorderCh() is called.
+  int has_border;    // Defaults to 1
+  int border_color;  // Defaults to WH_BK
+
+  // Default border characters
+  int h;
+  int v;
+  int tl, tr, bl, br;
+
+  // Menu settings
+  int nitems;          // Defaults to 0
+  char **items;
+  int cur_item;        // Currently selected item (defaults to 0)
+  int item_y, item_x;  // position of first item in list
+
+  // Highlight settings
+  int hl_color;     // Defaults to BK_WH
+  int hl_line;      // Bool: 1 will highlight the entire horizontal
+                    //       line minus the border
+                    //       Default is 0, which only highlights the
+                    //       selected text
+  int hl_forward;   // Constant. Set to always highlight n spaces forwards
+                    // starting at the first character of the item.
+  int hl_backward;  // Constant. Set to always highlight n spaces backwards
+                    // starting at the first character of the item.
 } ACscreen;
 
 /*
@@ -77,20 +121,8 @@ typedef struct ac_screen {
 
   A lot of values are not passed into or set in the init function,
   these must be set manually.
-
-  Example of a half full slider with default settings and length=8 and width=1:
-  +--------+
-  |====    |
-  +--------+
-
-  Example of a half full slider with default settings and length=8 and width=3:
-  +--------+
-  |====    |
-  |====    |
-  |====    |
-  +--------+
 */
-typedef struct slider {
+typedef struct ac_slider {
   // The following must be passed into ac_sliderInit()
   ACscreen *parent; // Which screen the slider will be drawn on
   int min;          // Min value the slider can represent
@@ -99,6 +131,8 @@ typedef struct slider {
                     // drawing the border (so length=3 would be drawn as 5)
   int width;        // How wide the slider will be. 
 
+  WINDOW *win;      // Subwindow of parent screen's window
+
   // The following must be set manually according to your needs
   int val;          // Current value the slider represents
                     // Default: 0
@@ -106,7 +140,7 @@ typedef struct slider {
   int start_x;      // Default: 0
   int border;       // Bool: 0 will not draw a border around the slider
                     // Default: 1
-  int isHorizontal; // Default: 1
+  int orientation;  // Default: SLIDER_H (0)
   char label[CMAX]; // Drawn underneath the slider if exists
   int color_fill;   // Default: WH_BK
   int color_border; // Default: WH_BK
@@ -122,15 +156,49 @@ typedef struct slider {
   int print_val;    // Bool: 1 will print the current value at the end
                     //       of the label (or where the label would be)
                     // Default: 0
-} Slider;
+} ACslider;
+
+/*
+  An interactive menu 
+*/
+//typedef struct ac_menu {
+//  ACscreen *parent;
+//  int nitems;
+//  char *items[CMAX];
+//
+//  int color;          // Default: WH_BK
+//  int border_color;   // Default: WH_BK
+//  WINDOW *win;
+//
+//  // Title settings
+//  char title[CMAX];   // Default: NULL
+//  int title_color;    // Default: WH_BK
+//  int title_pos;      // Default: CENTER
+//  int title_offset;   // Default: 0
+//} ACmenu;
+
+typedef ACscreen ACmenu;
 
 // Screen functions
 ACscreen *ac_screenInit(int height, int width, int start_y, int start_x);
+void ac_changeColor(ACscreen *s, int pair);
+void ac_setTitle(ACscreen *s, char *name, int color, int pos, int offset);
+void ac_unsetTitle(ACscreen *s);
+void ac_unsetBorder(ACscreen *s);
+void ac_drawTitle(ACscreen *s);
 void ac_drawBorder(ACscreen *s);
-void ac_drawBorderCh(ACscreen *s, char horizontal, char vertical, char corner);
+void ac_drawBorderCh(ACscreen *s);
+
+void ac_itemStart(ACscreen *s, int ypos, int xpos);
+void ac_addItem(ACscreen *s, const char *str);
+void ac_highlight(ACscreen *s, int y, int x);
+void ac_drawMenu(ACscreen *s);
+void ac_itemNext(ACscreen *s);
+void ac_itemPrev(ACscreen *s);
+
+// Print functions
 int ac_printField(ACscreen *s, int y, int x, int field_size, char field[]);
 void ac_printFields(ACscreen *s, int y, int x, int field_size, char *fields[], int nfields);
-void ac_changeColor(ACscreen *s, int pair);
 void ac_drawLineH(ACscreen *s, int y, char c, int overwrite_border);
 void ac_drawLineV(ACscreen *s, int x, char c, int overwrite_border);
 int ac_printCenter(ACscreen *s, int y, char *str);
@@ -139,20 +207,27 @@ void ac_rainbow(ACscreen *s, int y, int x, char *str, int colors[], int ncolors)
 void ac_printSpace(ACscreen *s, int y, int x, char *str, int n);
 void ac_printV(ACscreen *s, int  y, int x, char *str);
 void ac_printSpaceV(ACscreen *s, int y, int x, char *str, int n);
-void ac_setTitle(ACscreen *s, char *name, int color, int pos, int offset);
-void ac_printTitle(ACscreen *s);
-
-// Initialize and destroy functions
-void ac_init(int echo, int newline_mode);
-void ac_end();
-void ac_colorPairsInit();
-void ac_colorStart();
 
 // Slider functions
-Slider *ac_sliderInit(ACscreen *parent, int min, int max, int length, int width);
-void ac_sliderSetLabel(Slider *s, const char *str);
-void ac_sliderDraw(Slider *s);
-void ac_sliderSetLabel(Slider *s, const char *str);
-void ac_sliderColorAll(Slider *s, int color);
+ACslider *ac_sliderInit(ACscreen *parent, int min, int max, int length, int width, int start_y, int start_x);
+void ac_sliderSetLabel(ACslider *s, const char *str);
+void ac_sliderSetPos(ACslider *s, int y, int x);
+void ac_sliderDraw(ACslider *s);
+void ac_sliderSetLabel(ACslider *s, const char *str);
+void ac_sliderColorAll(ACslider *s, int color);
+
+// Menu functions
+ACmenu *ac_menuInit(ACscreen *parent, int height, int width, int start_y, int start_x);
+void ac_menuSetTitle(ACmenu *m, char *name, int color, int pos, int offset);
+void ac_menuAddItem(ACmenu *m, char *item);
+void ac_menuDraw(ACmenu *m);
+
+// Initialize, destroy, refresh
+void ac_colorPairsInit();
+void ac_colorStart();
+void ac_refresh(ACscreen *s);
+char ac_getch(ACscreen *s);
+void ac_init();
+void ac_end();
 
 #endif

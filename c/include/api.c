@@ -12,7 +12,7 @@
 #define FIELD_SIZE   20
 #define MAXLEN       80
 #define SLIDER_LEN   10
-#define SLIDER_WIDTH  7
+#define SLIDER_WIDTH  3
 
 #define SPEED_FAST   16
 #define SPEED_MID     4
@@ -20,17 +20,12 @@
 
 #define INFO_COLOR "WH_BK"
 
-void draw_header(ACscreen *s)
-{
-  ac_changeColor(s, BL_BK); ac_printCenter(s, 0, "COLOR PICKER");
-}
-
 int map(int val, int A, int B, int a, int b)
 {
   return (val - A) * (b - a) / (B - A) + a;
 }
 
-void draw_slider(Slider *s)
+void draw_slider(ACslider *s)
 {
   int i;
   int ypos = s->start_y;
@@ -90,17 +85,17 @@ void draw_slider(Slider *s)
   ac_changeColor(s->parent, s->color_val);
 }
 
-void draw_main(ACscreen *screen, Slider *RGB[])
+void draw_main(ACscreen *screen, ACslider *RGB[])
 {
   int i;
 
   // sliders
   for (i = 0; i < 3; i++){
-    Slider *slider = RGB[i];
+    ACslider *slider = RGB[i];
     ac_sliderDraw(slider);
   }
 
-  ac_printTitle(screen);
+  ac_drawTitle(screen);
 }
 
 void draw_info(ACscreen *s, int speed, char ch)
@@ -108,29 +103,28 @@ void draw_info(ACscreen *s, int speed, char ch)
   // Speed
   if (speed == SPEED_SLOW) ac_changeColor(s, YL_BK);
   mvwaddstr(s->win, s->start_yRel+1, s->start_xRel+2, "1: SPEED SLOW");
-  ac_changeColor(s, WH_BK);
+  ac_changeColor(s, s->color);
   if (speed == SPEED_MID) ac_changeColor(s, YL_BK);
   mvwaddstr(s->win, s->start_yRel+2, s->start_xRel+2, "2: SPEED MEDIUM");
-  ac_changeColor(s, WH_BK);
+  ac_changeColor(s, s->color);
   if (speed == SPEED_FAST) ac_changeColor(s, YL_BK);
   mvwaddstr(s->win, s->start_yRel+3, s->start_xRel+2, "3: SPEED FAST");
-  ac_changeColor(s, WH_BK);
+  ac_changeColor(s, s->color);
 
   // Colors
-  if (ch == 'y' || ch == 'u') ac_changeColor(s, RD_BK);
   mvwaddstr(s->win, s->start_yRel+1, s->end_xRel*.33, "Y: Decrease Red");
   mvwaddstr(s->win, s->start_yRel+1, s->end_xRel*.66, "U: Increase Red");
   mvwaddstr(s->win, s->start_yRel+2, s->end_xRel*.33, "H: Decrease Green");
   mvwaddstr(s->win, s->start_yRel+2, s->end_xRel*.66, "J: Increase Green");
   mvwaddstr(s->win, s->start_yRel+3, s->end_xRel*.33, "N: Decrease Blue");
   mvwaddstr(s->win, s->start_yRel+3, s->end_xRel*.66, "M: Increase Blue");
+  ac_refresh(s);
 }
 
-void draw_image(ACscreen *s, Slider *RGB[])
+void draw_image(ACscreen *s, ACslider *RGB[])
 {
   init_color(COLOR_MAGENTA, RGB[0]->val, RGB[1]->val, RGB[2]->val);
   ac_changeColor(s, MG_BK);
-  ac_printCenter(s, 0, "MERRY CHRISTMAS");
   ac_printCenter(s, 2, "*");
   ac_printCenter(s, 3, "XXX");
   ac_printCenter(s, 4, "XXXXXXX");
@@ -153,10 +147,8 @@ void draw_image(ACscreen *s, Slider *RGB[])
   ac_printCenter(s, 20, "                        |_|     |___|");
 }
 
-void construct_slider(Slider *s, int y, int x, char *label, int color_all, int print_val)
+void construct_slider(ACslider *s, char *label, int color_all, int print_val)
 {
-  s->start_y = y;
-  s->start_x = x;
   strcpy(s->label, label);
   ac_sliderColorAll(s, color_all);
   s->print_val = print_val;
@@ -164,59 +156,88 @@ void construct_slider(Slider *s, int y, int x, char *label, int color_all, int p
 
 int main()
 {
-  ac_init(0, 0);
-  ac_colorStart();
+  ac_init();
 
   // Initialize header screen
   ACscreen *sHeader = ac_screenInit(3, H_SIZE, AC_YPOS, START_X);
-  ac_changeColor(sHeader, GR_BK);
+  ac_unsetBorder(sHeader);
 
   // Initialize main screen
   ACscreen *sMain = ac_screenInit(30, H_SIZE, AC_YPOS, START_X);
-  ac_drawBorder(sMain);
 
   // Initialize info screen
-  ACscreen *sInfo = ac_screenInit(5, H_SIZE, AC_YPOS-1, START_X);
-  ac_drawBorder(sInfo);
+  ACscreen *sInfo = ac_screenInit(5, H_SIZE, AC_YPOS, START_X);
 
   // Initialize image screen
   ACscreen *sImage = ac_screenInit(sMain->height*0.75, sMain->width*0.5,
                                    sMain->end_yRel*0.25, sMain->end_xRel*0.05);
-  ac_drawBorder(sImage);
+
+  ACmenu *mMain = ac_screenInit(sMain->height*0.4, sMain->width*0.8,
+                                sMain->end_yRel*.70, sMain->end_xRel*0.60);
+  ac_setTitle(mMain, "FILES", RD_BK, LEFT, 2);
+  ac_addItem(mMain, "acurses.h");
+  ac_addItem(mMain, "acurses.c");
+  ac_addItem(mMain, "api.c");
+  ac_addItem(mMain, "'[Namazu] Bitch Otokonoko no Jouji Kiroku (Gekkan Web Otoko no Ko-llection! S Vol. 65) [Chinese] [Digital]'");
+  ac_addItem(mMain, "box.c");
 
   // Create color sliders
-  int bar_offset = SLIDER_WIDTH+3;
-  Slider *red = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH);
-  int tmpX = red->parent->end_xRel*.60;
-  int tmpY = red->parent->end_yRel*.15;
-  construct_slider(red, tmpY, tmpX, "R: ", RD_BK, 1);
-  red->isHorizontal = 0;
+  int bar_offset = SLIDER_WIDTH+5;
+  int tmpX = sMain->end_xRel*.60;
+  int tmpY = sMain->end_yRel*.15;
+  ACslider *red = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
+  construct_slider(red, "R: ", RD_BK, 1);
+  red->orientation = SLIDER_V;
 
-  Slider *green = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH);
   tmpX = red->start_x+bar_offset;
   tmpY = red->start_y;
-  construct_slider(green, tmpY, tmpX, "G: ", GR_BK, 1);
-  green->isHorizontal = 0;
+  ACslider *green = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
+  construct_slider(green, "G: ", GR_BK, 1);
+  green->orientation = SLIDER_V;
 
-  Slider *blue = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH);
   tmpX = green->start_x+bar_offset;
   tmpY = green->start_y;
-  construct_slider(blue, tmpY, tmpX, "B: ", BL_BK, 1);
-  blue->isHorizontal = 0;
+  ACslider *blue = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
+  construct_slider(blue, "B: ", BL_BK, 1);
+  blue->orientation = SLIDER_V;
 
-  Slider *RGB[3];
+//  int bar_offset = SLIDER_WIDTH+5;
+//  int tmpX = sMain->end_xRel*.60;
+//  int tmpY = sMain->end_yRel*.15;
+//  ACslider *red = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
+//  construct_slider(red, "R: ", RD_BK, 1);
+//  red->orientation = SLIDER_H;
+//
+//  tmpX = red->start_x;
+//  tmpY = red->start_y+bar_offset;
+//  ACslider *green = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
+//  construct_slider(green, "G: ", GR_BK, 1);
+//  green->orientation = SLIDER_H;
+//
+//  tmpX = green->start_x;
+//  tmpY = green->start_y+bar_offset;
+//  ACslider *blue = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
+//  construct_slider(blue, "B: ", BL_BK, 1);
+//  blue->orientation = SLIDER_H;
+
+  ACslider *RGB[3];
   RGB[0] = red;
   RGB[1] = green;
   RGB[2] = blue;
 
-  nodelay(stdscr, 1);
-  char ch;
+  int ch;
   int speed = SPEED_SLOW;
   int i;
 
   // Set titles
+  ac_setTitle(sHeader, "COLOR PICKER", BL_BK, CENTER, 0);
   ac_setTitle(sMain, "MAIN", YL_BK, CENTER, 0);
+  ac_setTitle(sImage, "MERRY CHRISTMAS", GR_BK, CENTER, 0);
 
+  ac_refresh(sHeader);
+  ac_refresh(sMain);
+  ac_refresh(sInfo);
+  ac_refresh(sImage);
   do{
     attron(A_BOLD);
     refresh();
@@ -232,14 +253,14 @@ int main()
       case 'j': green->val += speed; break;
       case 'n': blue->val -= speed; break;
       case 'm': blue->val += speed; break;
+
+      case 'A': ac_itemPrev(mMain); break;
+      case 'B': ac_itemNext(mMain); break;
     }
     for (i = 0; i < 3; i++){
       if (RGB[i]->val > RGB[i]->max) RGB[i]->val = RGB[i]->max;
       if (RGB[i]->val < 0)           RGB[i]->val = 0;
     }
-
-    // Header
-    draw_header(sHeader);
 
     // Main
     draw_main(sMain, RGB);
@@ -250,13 +271,12 @@ int main()
     // Image
     draw_image(sImage, RGB);
 
-    int arr[3] = { RD_BK, GR_BK, BL_BK };
-
-    wrefresh(sHeader->win);
-    wrefresh(sMain->win);
-    wrefresh(sInfo->win);
-    wrefresh(sImage->win);
-  } while ((ch = getch()) != 'q');
+    ac_refresh(sHeader);
+    ac_refresh(sMain);
+    ac_refresh(sInfo);
+    ac_refresh(sImage);
+    ac_refresh(mMain);
+  } while ((ch = ac_getch(mMain)) != 'q');
 
   ac_end();
 }
