@@ -34,10 +34,9 @@
 #define SLIDER_H   1
 
 
-// Updates every time a new window is created.
+// Updates every time a new screen is created below the bottommost.
 // If passed into ac_screenInit() in place of start_y,
-// allows new window to be placed directly below
-// the most recent window. Always updates on ac_screenInit().
+// allows new window to be placed directly below bottommost screen.
 extern int AC_YPOS;
 
 // Color pairs.
@@ -89,17 +88,10 @@ typedef struct ac_screen {
   // ac_drawBorder() or ac_drawBorderCh() is called.
   int has_border;    // Defaults to 1
   int border_color;  // Defaults to WH_BK
-
-  // Default border characters
+  int border_offset; // Defaults to 2 (for each side horizontally or vertically)
   int h;
   int v;
   int tl, tr, bl, br;
-
-  // Menu settings
-  int nitems;          // Defaults to 0
-  char **items;
-  int cur_item;        // Currently selected item (defaults to 0)
-  int item_y, item_x;  // position of first item in list
 
   // Highlight settings
   int hl_color;     // Defaults to BK_WH
@@ -111,6 +103,24 @@ typedef struct ac_screen {
                     // starting at the first character of the item.
   int hl_backward;  // Constant. Set to always highlight n spaces backwards
                     // starting at the first character of the item.
+
+  // Menu settings
+  int nitems;          // Defaults to 0
+  char **items;
+  int cur_item;        // Currently selected item (defaults to 0)
+  int item_start_y;
+  int item_start_x;
+  int item_end_y;
+  int item_end_x;
+  int item_height;
+  int item_width;
+  int items_visible;   // Total # of visible items
+  int top_visible;     // Track the top and bottom visible
+  int bot_visible;     // items to enable scrolling.
+  int wrap;            // Bool: 1 allows wrapping when reaching end of menu
+                       // Default: 0
+  int scrolloff;       // Set to view more lines ahead when scrolling
+                       // Default: 1
 } ACscreen;
 
 /*
@@ -189,12 +199,20 @@ void ac_drawTitle(ACscreen *s);
 void ac_drawBorder(ACscreen *s);
 void ac_drawBorderCh(ACscreen *s);
 
-void ac_itemStart(ACscreen *s, int ypos, int xpos);
-void ac_addItem(ACscreen *s, const char *str);
-void ac_highlight(ACscreen *s, int y, int x);
-void ac_drawMenu(ACscreen *s);
-void ac_itemNext(ACscreen *s);
-void ac_itemPrev(ACscreen *s);
+// Menu functions (menus are syntactic sugar for screens)
+ACmenu *ac_menuInit(int height, int width, int start_y, int start_x);
+void ac_menuSetTitle(ACmenu *m, char *name, int color, int pos, int offset);
+void ac_itemStart(ACmenu *m, int y, int x, int height, int width);
+void ac_addItem(ACmenu *m, char *str);
+void ac_addItems(ACmenu *m, char **items, int nitems);
+void ac_highlight(ACmenu *m, int y, int x);
+void ac_truncateString(ACmenu *m, char *str, const char *runoff);
+void ac_drawMenu(ACmenu *m);
+void ac_itemNext(ACmenu *m);
+void ac_itemPrev(ACmenu *m);
+void ac_itemNextn(ACmenu *m, int n);
+void ac_itemPrevn(ACscreen *m, int n);
+void ac_itemSet(ACscreen *m, int n);
 
 // Print functions
 int ac_printField(ACscreen *s, int y, int x, int field_size, char field[]);
@@ -217,9 +235,6 @@ void ac_sliderSetLabel(ACslider *s, const char *str);
 void ac_sliderColorAll(ACslider *s, int color);
 
 // Menu functions
-ACmenu *ac_menuInit(ACscreen *parent, int height, int width, int start_y, int start_x);
-void ac_menuSetTitle(ACmenu *m, char *name, int color, int pos, int offset);
-void ac_menuAddItem(ACmenu *m, char *item);
 void ac_menuDraw(ACmenu *m);
 
 // Initialize, destroy, refresh

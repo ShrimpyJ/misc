@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "acurses.h"
 
 #define H_SIZE       84
@@ -23,6 +24,38 @@
 int map(int val, int A, int B, int a, int b)
 {
   return (val - A) * (b - a) / (B - A) + a;
+}
+
+char **read_files(int *nfiles)
+{
+  char **files;
+  int n = 0;
+  DIR *dir;
+  struct dirent *ent;
+  if ((dir = opendir(".")) != NULL){
+    while ((ent = readdir(dir)) != NULL){
+      if (ent->d_name[0] == '.' && ent->d_name[1] == '\0') continue;
+      if (ent->d_name[0] == '.' && ent->d_name[1] == '.') continue;
+      n++;
+    }
+    closedir(dir);
+  }
+
+  *nfiles = n;
+
+  files = calloc(n, sizeof(char *));
+  n = 0;
+  if ((dir = opendir(".")) != NULL){
+    while ((ent = readdir(dir)) != NULL){
+      if (ent->d_name[0] == '.' && ent->d_name[1] == '\0') continue;
+      if (ent->d_name[0] == '.' && ent->d_name[1] == '.') continue;
+      files[n] = calloc(strlen(ent->d_name), sizeof(char));
+      strncpy(files[n], ent->d_name, strlen(ent->d_name));
+      n++;
+    }
+    closedir(dir);
+  }
+  return files;
 }
 
 void draw_slider(ACslider *s)
@@ -172,14 +205,20 @@ int main()
   ACscreen *sImage = ac_screenInit(sMain->height*0.75, sMain->width*0.5,
                                    sMain->end_yRel*0.25, sMain->end_xRel*0.05);
 
-  ACmenu *mMain = ac_screenInit(sMain->height*0.4, sMain->width*0.8,
-                                sMain->end_yRel*.70, sMain->end_xRel*0.60);
-  ac_setTitle(mMain, "FILES", RD_BK, LEFT, 2);
-  ac_addItem(mMain, "acurses.h");
-  ac_addItem(mMain, "acurses.c");
-  ac_addItem(mMain, "api.c");
-  ac_addItem(mMain, "'[Namazu] Bitch Otokonoko no Jouji Kiroku (Gekkan Web Otoko no Ko-llection! S Vol. 65) [Chinese] [Digital]'");
-  ac_addItem(mMain, "box.c");
+  // Initialize files screen
+  ACmenu *mFiles = ac_menuInit(sMain->height*0.4, sMain->width*0.8,
+                               sMain->end_yRel*.70, sMain->end_xRel*0.60);
+  ac_itemStart(mFiles, 1, 1, 999, 999);
+  ac_setTitle(mFiles, "FILES", RD_BK, LEFT, 2);
+  char str[80];
+  sprintf(str, "%s %13d %s", "Hello", 1, "Father");
+  ac_addItem(mFiles, str);
+  ac_addItem(mFiles, "'[Namazu] Bitch Otokonoko no Jouji Kiroku (Gekkan Web Otoko no Ko-llection! S Vol. 65) [Chinese] [Digital]'");
+  int nfiles;
+  char **files = read_files(&nfiles);
+  ac_addItems(mFiles, files, nfiles);
+
+  ACmenu *mFiles2 = ac_menuInit(mFiles->height, mFiles->width, mFiles->start_y, mFiles->start_x);
 
   // Create color sliders
   int bar_offset = SLIDER_WIDTH+5;
@@ -200,25 +239,6 @@ int main()
   ACslider *blue = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
   construct_slider(blue, "B: ", BL_BK, 1);
   blue->orientation = SLIDER_V;
-
-//  int bar_offset = SLIDER_WIDTH+5;
-//  int tmpX = sMain->end_xRel*.60;
-//  int tmpY = sMain->end_yRel*.15;
-//  ACslider *red = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
-//  construct_slider(red, "R: ", RD_BK, 1);
-//  red->orientation = SLIDER_H;
-//
-//  tmpX = red->start_x;
-//  tmpY = red->start_y+bar_offset;
-//  ACslider *green = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
-//  construct_slider(green, "G: ", GR_BK, 1);
-//  green->orientation = SLIDER_H;
-//
-//  tmpX = green->start_x;
-//  tmpY = green->start_y+bar_offset;
-//  ACslider *blue = ac_sliderInit(sMain, 0, 255, SLIDER_LEN, SLIDER_WIDTH, tmpY, tmpX);
-//  construct_slider(blue, "B: ", BL_BK, 1);
-//  blue->orientation = SLIDER_H;
 
   ACslider *RGB[3];
   RGB[0] = red;
@@ -254,8 +274,8 @@ int main()
       case 'n': blue->val -= speed; break;
       case 'm': blue->val += speed; break;
 
-      case 'A': ac_itemPrev(mMain); break;
-      case 'B': ac_itemNext(mMain); break;
+      case 'A': ac_itemPrev(mFiles); break;
+      case 'B': ac_itemNext(mFiles); break;
     }
     for (i = 0; i < 3; i++){
       if (RGB[i]->val > RGB[i]->max) RGB[i]->val = RGB[i]->max;
@@ -275,8 +295,8 @@ int main()
     ac_refresh(sMain);
     ac_refresh(sInfo);
     ac_refresh(sImage);
-    ac_refresh(mMain);
-  } while ((ch = ac_getch(mMain)) != 'q');
+    ac_refresh(mFiles);
+  } while ((ch = ac_getch(mFiles)) != 'q');
 
   ac_end();
 }

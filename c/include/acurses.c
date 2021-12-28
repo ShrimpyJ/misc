@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <string.h>
+#include <locale.h>
 #include "acurses.h"
 
-int AC_YPOS = 0;
+int AC_YPOS = 0;   // Tracks ypos of bottommost screen
 
 // Rounds up if an odd length
 int get_middle(int len)
@@ -11,7 +12,6 @@ int get_middle(int len)
   if (len % 2 == 0) return len / 2;
   else return len / 2 + 1;
 }
-
 
 ////////////////////// Screen ///////////////////////////////
 // Initialize a new screen with relevant info.
@@ -45,7 +45,7 @@ ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
   s->mid_xRel = get_middle(s->width);
 
   s->win = newwin(height, width, start_y, start_x);
-  AC_YPOS += s->height;
+  if (start_y >= AC_YPOS) AC_YPOS += s->height;
   s->color = WH_BK;
 
   // Set default title settings
@@ -54,27 +54,29 @@ ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
   s->title_pos = CENTER;
   s->title_offset = 0;
 
-  // Set default highlight settings
-  s->hl_color = BK_WH;
-  s->hl_line = 0;      // Set to 1 to highlight entire screen minus border
-  s->hl_forward = 0;   // Constant. Set to always highlight n spaces forward
-  s->hl_backward = 0;  // Constant. Set to always highlight n spaces backward
-
   // Set default border settings
   s->has_border = 1;
   s->border_color = WH_BK;
-  //s->h = LINE_H;
-  //s->v = LINE_V;
-  //s->tl = LINE_TL;
-  //s->tr = LINE_TR;
-  //s->bl = LINE_BL;
-  //s->br = LINE_BR;
+  s->border_offset = 2;
 
-  // Set default menu settings
+  // Set default highlight settings
+  s->hl_color = BK_WH;
+  s->hl_line = 1;      // Set to 1 to highlight entire screen minus border
+  s->hl_forward = 0;   // Constant. Set to always highlight n spaces forward
+  s->hl_backward = 0;  // Constant. Set to always highlight n spaces backward
+
+
+  // Set default settings for a menu
+  // Menus are syntactic sugar for screens
   s->nitems = 0;
   s->items = calloc(1, sizeof(char *));
-  s->cur_item = 0;
-  s->item_x = s->item_y = 1;
+  s->cur_item = 0;              // Currently highlighted item
+  s->item_start_x = 1;   // Starting position of items list
+  s->item_start_y = 1;   // Starting position of items list
+  s->top_visible = 0;    // Track the top and bottom
+  s->bot_visible = 0;    // visible items for scrolling
+  s->wrap = 1;           // Set to 1 to allow menu to wrap back around
+  s->scrolloff = 1;      // Set to view more lines before scrolling
 
   return s;
 }
@@ -110,6 +112,7 @@ void ac_unsetTitle(ACscreen *s)
 void ac_unsetBorder(ACscreen *s)
 {
   s->has_border = 0;
+  s->border_offset = 1;
 }
 
 // Draw screen title in center of screen's top row.
@@ -182,97 +185,208 @@ void ac_drawBorderCh(ACscreen *s)
   ac_changeColor(s, s->color);
 }
 
-// Set starting position of a menu's item list
-void ac_itemStart(ACscreen *s, int y, int x)
+
+//////////////////// Menu /////////////////////
+// A menu is syntactic sugar for a screen
+ACmenu *ac_menuInit(int height, int width, int start_y, int start_x)
 {
-  s->item_y = y;
-  s->item_x = x;
+  ACmenu *m = ac_screenInit(height, width, start_y, start_x);
+  return m;
+}
+
+void ac_menuSetTitle(ACmenu *m, char *name, int color, int pos, int offset)
+{
+  ac_setTitle(m, name, color, pos, offset);
+}
+
+// Set starting position of a menu's item list
+void ac_itemStart(ACmenu *m, int y, int x, int height, int width)
+{
+  if (y < 0) y = 0;
+  if (y > m->height) y = m->height-m->border_offset;
+  if (x < 0) x = 0;
+  if (x > m->width) y = m->width-m->border_offset;
+  m->item_start_y = y;
+  m->item_start_x = x;
+
+  if (y + height > m->height) height = m->height-m->border_offset - y;
+  if (x + width > m->width) width = m->width-m->border_offset - x;
+  m->item_height = height;
+  m->item_height = width;
+  m->item_end_y = y + height;
+  if (m->item_end_y > m->height) m->item_end_y = m->height-m->border_offset;
+  m->item_end_x = x + width;
+  if (m->item_end_x > m->width) m->item_end_x = m->width-m->border_offset;
+  m->bot_visible -= m->item_start_y-1;
 }
 
 // Add a string to the end of a menu's item list
-void ac_addItem(ACscreen *s, const char *str)
+void ac_addItem(ACmenu *m, char *str)
 {
-  s->nitems++;
-  s->items = (char **) realloc(s->items, s->nitems * sizeof(*s->items));
-  s->items[s->nitems-1] = (char *) calloc(1, sizeof(char)*strlen(str)+1);
-  strncpy(s->items[s->nitems-1], str, strlen(str));
+  m->nitems++;
+  if (m->nitems <= (m->height - m->border_offset)) m->bot_visible++;
+  m->items = (char **) realloc(m->items, m->nitems * sizeof(*m->items));
+  m->items[m->nitems-1] = (char *) calloc(1, sizeof(char)*strlen(str)+1);
+  strncpy(m->items[m->nitems-1], str, strlen(str));
+}
+
+void ac_addItems(ACmenu *m, char **items, int nitems)
+{
+  int i;
+  for (i = 0; i < nitems; i++){
+    ac_addItem(m, items[i]);
+  }
 }
 
 // Highlight a line based on screen's highlight settings
-void ac_highlight(ACscreen *s, int y, int x)
+void ac_highlight(ACmenu *m, int y, int x)
 {
   int i;
 
 
-  if (!s->hl_line && !s->hl_forward && !s->hl_backward) return;
+  if (!m->hl_line && !m->hl_forward && !m->hl_backward) return;
 
-  ac_changeColor(s, s->hl_color);
+  ac_changeColor(m, m->hl_color);
 
-  if (s->hl_line){
-    for (i = 1; i < s->width-1; i++){
-      mvwaddch(s->win, y, i, ' ');
+  if (m->hl_line){
+    for (i = 1; i < m->width-1; i++){
+      mvwaddch(m->win, y, i, ' ');
     }
-    ac_changeColor(s, s->color);
+    ac_changeColor(m, m->color);
     return;
   }
 
-  if (s->hl_forward > 0){
-    for (i = 0; i < s->hl_forward; i++){
-      mvwaddch(s->win, y, x+i, ' ');
+  if (m->hl_forward > 0){
+    for (i = 0; i < m->hl_forward; i++){
+      mvwaddch(m->win, y, x+i, ' ');
     }
   }
 
-  if (s->hl_backward > 0){
-    for (i = 0; i < s->hl_backward; i++){
-      mvwaddch(s->win, y, x-i-1, ' ');
+  if (m->hl_backward > 0){
+    for (i = 0; i < m->hl_backward; i++){
+      mvwaddch(m->win, y, x-i-1, ' ');
     }
   }
 
-  ac_changeColor(s, s->color);
+  ac_changeColor(m, m->color);
 }
 
-void ac_drawMenu(ACscreen *s)
+// Truncate a string which is too long for a menu and append a runoff string
+void ac_truncateString(ACmenu *m, char *str, const char *runoff)
 {
-  int i, j;
-  int offset = 0;
+  char tmp[m->width];
+  memset(tmp, 0, m->width);
+  int len = m->width - m->border_offset - strlen(runoff);
+  strncpy(tmp, str, len);
+  memset(str, 0, strlen(str));
+  strncpy(str, tmp, len);
+  strncat(str, runoff, strlen(runoff));
+}
 
-  for (i = 0; i < s->nitems; i++){
-    char *str = s->items[i];
+void scrollDown(ACmenu *m, int n)
+{
+  m->top_visible += n;
+  m->bot_visible += n;
+  werase(m->win);
+}
+
+void scrollUp(ACmenu *m, int n)
+{
+  m->top_visible -= n;
+  m->bot_visible -= n;
+  werase(m->win);
+}
+
+void ac_drawMenu(ACmenu *m)
+{
+  int i, j, k;
+  const char *runoff = "...\0";
+
+  int index = 0;
+  for (i = m->top_visible; i < m->bot_visible; i++){
+    if (m->bot_visible > m->nitems) {
+      endwin();
+      exit(1);
+    }
+    char *str = m->items[i];
+    int scrolloff = m->scrolloff;
+    int overflow = m->cur_item + scrolloff;
+
+    // Adjust scrolloff to avoid end collisions
+    if (overflow >= m->nitems)          scrolloff = 0;
+    else if (m->cur_item-scrolloff < 0) scrolloff = 0;
+
+    // Scroll down if current item extends beyond menu bounds
+    if (m->cur_item + scrolloff > m->bot_visible){
+      scrollDown(m, overflow - m->bot_visible + 1);
+      ac_drawMenu(m);
+      return;
+    }
+
+    // Scroll up if current item extends beyond menu bounds
+    if (m->cur_item - scrolloff < m->top_visible){
+      scrollUp(m, m->top_visible - m->cur_item + scrolloff);
+      ac_drawMenu(m);
+      return;
+    }
 
     // Truncate names which are too long for the menu
-    if (strlen(s->items[i]) > s->width){
-      char tmp[strlen(str)];
-      if (s->has_border) strncpy(tmp, str, s->width-5);
-      else strncpy(tmp, str, s->width-3);
-      memset(str, 0, strlen(str));
-      strncpy(str, tmp, strlen(tmp));
-      strncat(str, "...", 3);
+    if (strlen(m->items[i]) > m->width - m->border_offset){
+      ac_truncateString(m, m->items[i], runoff);
     }
 
     // Draw current menu item highlighted
-    if (i == s->cur_item){
-      ac_highlight(s, s->item_y+i+offset, s->item_x);
-      ac_changeColor(s, s->hl_color);
-      mvwaddstr(s->win, s->item_y+i+offset, s->item_x, str);
-      ac_changeColor(s, s->color);
-      continue;
+    if (i == m->cur_item){
+      ac_highlight(m, m->item_start_y+index, m->item_start_x);
+      ac_changeColor(m, m->hl_color);
+      mvwaddstr(m->win, m->item_start_y+index, m->item_start_x, str);
+      ac_changeColor(m, m->color);
     }
-
     // Draw other menu items unhighlighted
-    mvwaddstr(s->win, s->item_y+i+offset, s->item_x, str);
-    if (strlen(str) > s->width) offset++;
+    else{
+      for (j = strlen(str)+m->border_offset/2; j < m->width-m->border_offset/2; j++){
+        mvwaddch(m->win, m->item_start_y+index, j, ' ');
+      }
+      mvwaddstr(m->win, m->item_start_y+index, m->item_start_x, str);
+    }
+    index++;
   }
 }
 
-void ac_itemNext(ACscreen *s)
+// Iterate down the item list
+void ac_itemNext(ACmenu *m)
 {
-  s->cur_item = (s->cur_item + 1) % s->nitems;
+  if (!m->wrap && m->cur_item == m->nitems-1) return;
+  m->cur_item = (m->cur_item + 1) % m->nitems;
 }
 
-void ac_itemPrev(ACscreen *s)
+// Iterate up the item list
+void ac_itemPrev(ACscreen *m)
 {
-  s->cur_item--;
-  if (s->cur_item < 0) s->cur_item = s->nitems-1;
+  if (!m->wrap && m->cur_item == 0) return;
+  m->cur_item--;
+  if (m->cur_item < 0) m->cur_item = m->nitems-1;
+}
+
+// Jump down the item list by n
+void ac_itemNextn(ACmenu *m, int n)
+{
+  int i;
+  for (i = 0; i < n; i++) ac_itemNext(m);
+}
+
+// Jump up the item list by n
+void ac_itemPrevn(ACscreen *m, int n)
+{
+  int i;
+  for (i = 0; i < n; i++) ac_itemPrev(m);
+}
+
+// Jump to the item n
+void ac_itemSet(ACscreen *m, int n)
+{
+  if (n < 0 || n > m->nitems-1) return;
+  m->cur_item = n;
 }
 
 ////////////////////// Print /////////////////////////////
@@ -530,37 +644,6 @@ void ac_sliderDraw(ACslider *s)
 }
 
 ////////////////// Menu /////////////////////////
-ACmenu *ac_menuInit(ACscreen *parent, int height, int width, int start_y, int start_x)
-{
-  ACmenu *m = calloc(1, sizeof(ACmenu));
-  m->nitems = 0;
-
-  m->border_color = WH_BK;
-  m->color = WH_BK;
-
-  m->title[0] = '\0';
-  m->title_color = WH_BK;
-  m->title_pos = CENTER;
-  m->title_offset = 0;
-
-  m->win = newwin(height, width, start_y, start_x);
-  return m;
-}
-
-void ac_menuSetTitle(ACmenu *m, char *name, int color, int pos, int offset)
-{
-  memset(m->title, 0, CMAX);
-  strncpy(m->title, name, strlen(name));
-  m->title_color = color;
-  m->title_pos = pos;
-  m->title_offset = offset;
-}
-
-void ac_menuAddItem(ACmenu *m, char *item)
-{
-  m->nitems++;
-}
-
 void ac_menuDraw(ACmenu *m)
 {
   int i;
@@ -642,14 +725,9 @@ char ac_getch(ACscreen *s)
   return ch;
 }
 
-// Doesn't need to be used, only initializes
-// ncurses with basic values such as instant
-// keyboard feedback (no RETURN needed) and
-// no echoing of keys back to the display.
-// Also initializes the acurses colors for
-// you so no need to call ac_colorStart().
 void ac_init()
 {
+  setlocale(LC_ALL, "");
   initscr();
   cbreak();
   keypad(stdscr, TRUE);
