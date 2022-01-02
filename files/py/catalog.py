@@ -1,6 +1,7 @@
 from random import *
 
 class Thread:
+    self.mac 
   def __init__(self):
     self.title = ""
     self.posts = 0
