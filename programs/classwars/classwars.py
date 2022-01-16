@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from enum import Enum
-import codecs
+import sys
 
 SCOUT = 0
 SOLDIER = 1
@@ -16,6 +16,8 @@ SPY = 8
 
 REDCOL = '#ba3435'
 BLUCOL = '#3db0d9'
+BGLIGHT = '#ece8cb'
+BGDARK = '#766b53'
 
 mercnames = ["Scout", "Soldier", "Pyro", "Demoman", "Heavy", "Engineer", "Medic", "Sniper", "Spy"]
 
@@ -82,7 +84,15 @@ def get_class(c):
     if c == "Spy":
         return SPY
 
-file = open('console.log', 'r', encoding='iso_8859_1')
+def autopct(pct, allvalues):
+    absolute = int(pct / 100.*np.sum(allvalues))
+    return "{:d}".format(absolute)
+
+if len(sys.argv) != 2:
+    print("usage: classwars.py LOGFILE")
+    quit()
+
+file = open(sys.argv[1], 'r', encoding='iso_8859_1')
 tmplines = file.read().splitlines()
 file.close()
 
@@ -99,7 +109,7 @@ for line in tmplines:
         continue
     if words[2] == "This":
         lines.append(line)
-    if words[-7] == "Second" and words[-8] == "captured":
+    if words[-8] == "captured" and (words[-7] == "the" or words[-7] == "Second"):
         lines.append(line)
 
 rounds = []
@@ -129,7 +139,7 @@ for i,line in enumerate(lines):
             victory(r, rounds, "RED")
         continue
 
-    if words[-7] == "Second":
+    if words[-8] == "captured" and (words[-7] == "the" or words[-7] == "Second"):
         victory(r, rounds, "BLU")
         continue
 
@@ -179,10 +189,15 @@ for r in rounds:
         bluteam[blumerc].classwins[redmerc] += 1
         redteam[redmerc].classlosses[blumerc] += 1
 
-matchups = []
-for i in range(len(mercnames)):
-    for j in range(len(mercnames)):
-        matchups.append([redteam[i], bluteam[j]])
+
+print()
+print("RED        BLU        RED WINS  BLU WINS")
+print("---        ---        --------  --------")
+for red in redteam:
+    for i in range(len(red.classwins)):
+        bluname = bluteam[i].name
+        print(f"%-10s %-10s" % (red.name, bluname), end='')
+        print(f"%9d %9d" % (red.classwins[i], red.classlosses[i]))
 
 print()
 print("TOTAL STATS")
@@ -208,8 +223,9 @@ print(f"Games captured: {s.total_rounds}\nRED wins: {s.red_wins}\nBLU wins: {s.b
 ### PLOT ###
 fig, axs = plt.subplots(2, 3, figsize=(16,9))
 
-axs[0,1].pie([s.red_wins, s.blu_wins], labels=["RED", "BLU"], colors=[REDCOL, BLUCOL])
-axs[0,1].set_title('Total Round Win % (Sample Size=' + str(s.total_rounds) + ')')
+data = [s.red_wins, s.blu_wins]
+axs[0,1].pie(data, labels=["RED", "BLU"], colors=[REDCOL, BLUCOL])
+axs[0,1].set_title('Total Round Win %' + ' (Sample Size=' + str(s.total_rounds) + ')')
 
 axs[0,0].axis('off')
 axs[0,2].axis('off')
@@ -260,7 +276,7 @@ axs[1,2].pie(redwins, labels=redwinslabels, radius=0.85)
 axs[1,2].set_title('RED Merc Win %', color=REDCOL)
 
 fig.tight_layout()
-plt.savefig('data0_totalwins')
+plt.savefig('data0_totalwins', facecolor=BGLIGHT)
 
 width = .24
 halfwidth = width * .5
@@ -280,33 +296,32 @@ axs[1].bar(np.arange(9)-halfwidth, redlosses, width=width, color='red', label='R
 axs[1].legend()
 
 fig.tight_layout()
-plt.savefig('data1_winslosses')
+axs[0].set_facecolor(BGLIGHT)
+axs[1].set_facecolor(BGLIGHT)
+plt.savefig('data1_winslosses', facecolor=BGLIGHT)
 
 fig, axs = plt.subplots(9,9, figsize=(18,9))
 
 ##### MATCHUP STATS ######
 ypos = 0
 xpos = 0
+fontsize = 10
 for red in redteam:
     for i in range(len(red.classwins)):
         bluname = bluteam[xpos].name
+        axs[ypos][xpos].text(-0.8, 1.5, red.name, color=REDCOL, ha='right', fontsize=fontsize)
+        axs[ypos][xpos].text(0, 1.5, 'vs.', color='black', ha='center', fontsize=fontsize)
+        axs[ypos][xpos].text(0.8, 1.5, bluname, color=BLUCOL, ha='left', fontsize=fontsize)
         if red.classwins[i] == 0 and red.classlosses[i] == 0:
-            axs[ypos,xpos].axis('off')
-            if xpos == 0:
-                axs[ypos][xpos].set_title("RED " + red.name + " vs. BLU " + bluname, fontsize=8)
-            else:
-                axs[ypos][xpos].set_title("vs. BLU " + bluname, fontsize=8)
-            xpos += 1
-            continue
-        data = [red.classwins[i], red.classlosses[i]]
-        if xpos == 0:
-            axs[ypos][xpos].set_title("RED " + red.name + " vs. BLU " + bluname, fontsize=8)
+            data = [100]
+            colors = ['grey']
+            axs[ypos][xpos].pie(data, colors=colors)
         else:
-            axs[ypos][xpos].set_title("vs. BLU " + bluname, fontsize=8)
-        axs[ypos][xpos].pie(data, colors=[REDCOL, BLUCOL])
+            data = [red.classwins[i], red.classlosses[i]]
+            colors = [REDCOL, BLUCOL]
+            axs[ypos][xpos].pie(data, colors=colors, autopct=lambda pct: autopct(pct, data))
         xpos += 1
     ypos += 1
     xpos = 0
-
 fig.tight_layout()
-plt.savefig('data2_matchups')
+plt.savefig('data2_matchups', facecolor=BGLIGHT)
