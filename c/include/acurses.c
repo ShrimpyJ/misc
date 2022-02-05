@@ -623,7 +623,7 @@ void ac_sliderDraw(ACslider *s)
   int ypos = s->start_y-2;
   int xpos = s->start_x;
   int size = (s->val - s->min) * (s->length-2) / (s->max - s->min);
-  
+
   // redraw empty first
   for (i = 0; i < s->length-2; i++){
     for (j = 0; j < s->width-2; j++){
