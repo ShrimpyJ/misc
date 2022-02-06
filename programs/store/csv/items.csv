@@ -1,0 +1,97 @@
+id,price,name,stock
+1,$0.21,Banana,567
+2,$2.99,Sara Lee Artesano Bakery Bread - 20 oz,363
+3,$2.99,Strawberries - 1 lb,362
+4,$2.99,2% Reduced Fat Milk - 1 gal,569
+5,$2.19,Grade A Large Eggs - 18 ct,789
+6,$1.49,Grade A Large Eggs - 12 ct,688
+7,$0.65,Sweet Onions,692
+8,$0.59,Cucumber,345
+9,$2.99,Vitamin D Whole Milk - 1 gal,987
+10,$0.69,Large Green Bell Pepper,693
+11,$1.79,Iceberg Lettuce,632
+12,$1.49,Purified Drinking Water,452
+13,$0.99,Medium Avocado,623
+14,$4.49,Seedless Mandarins - 3 lb,266
+15,$1.23,Broccoli Crowns - 1 lb,707
+16,$2.49,Red Seedless Grapes - 1 lb,754
+17,$1.09,Cut & Peeled Baby Carrots - 1 lb,420
+18,$3.99,Asparagus - 1 lb,318
+19,$1.49,Zucchini - 1 lb,439
+20,$3.49,Salted Butter Sticks - 4 ct / 16 oz,608
+21,$2.99,Blueberries - 11 oz,727
+22,$0.59,Green Onions,732
+23,$1.50,Red Bell Pepper,635
+24,$1.99,Boneless & Skinless Chicken Breasts with Rib Meat - 1 lb,644
+25,$1.69,2% Reduced Fat Milk - 1/2 gal,649
+26,$2.29,Honeycrisp Apple - 1 lb,367
+27,$1.59,Celery,661
+28,$1.89,Original Sour Cream - 16 oz,434
+29,$0.36,Roma Tomato,675
+30,$3.29,Red Raspberries - 6 oz,535
+31,$2.00,Grape Tomatoes - 10 oz,546
+32,$0.50,Jumbo Red Onions,723
+33,$0.28,Organic Banana,741
+34,$2.99,Green Seedless Grapes - 1 lb,503
+35,$3.49,Doritos® Nacho Cheese Tortilla Chips - 9.25 oz,353
+36,$1.29,Red Tomatoes,358
+37,$2.00,Large Avocado,571
+38,$2.99,Purified Drinking Water - 24 bottles / 16.9 fl oz,521
+39,$0.89,Lemons,747
+40,$0.89,Jewel Yams Sweet Potatoes,391
+41,$4.99,Blueberries - 18 oz,528
+42,$0.67,Russet Potato,412
+43,$2.29,Shredded Sharp Cheddar Cheese - 8 oz,399
+44,$2.29,Shredded Mexican Style Cheese Blend - 8 oz,662
+45,$2.29,Shredded Low-Moisture Mozzarella Cheese - 8 oz,408
+46,$1.99,On The Vine Tomatoes - 1 lb,513
+47,$0.89,Cilantro,526
+48,$5.49,80% Lean Ground Beef - 1 lb,688
+49,$1.49,English Cucumber,671
+50,$14.49,80% Lean Ground Beef - 3 lb,727
+51,$0.79,Large Limes,583
+52,$1.19,Distilled Water - 1 gal,431
+53,$1.49,White Hamburger Buns - 8 ct / 12 oz,653
+54,$3.29,Milo's Famous Sweet Tea - 128 fl oz,282
+55,$0.69,Garlic,592
+56,$6.49,Coca-Cola® Classic Soda - 12 cans / 12 fl oz,752
+57,$1.49,White Hot Dog Buns,740
+58,$3.29,Berries - Blackberries - 6 oz,370
+59,$1.99,Smidge and Spoon Granulated Sugar - 4 lb,291
+60,$2.99,Fat Free Skim Milk - 1 gal,297
+61,$2.99,Russet Potatoes - 5 lb,654
+62,$4.49,Boneless Skinless Chicken Breast - 1 lb,717
+63,$0.50,Medium Yellow Onions,495
+64,$3.49,Unsalted Butter Sticks - 4 ct / 16 oz,597
+65,$5.98,Strawberries - 32 oz,391
+66,$3.99,Sweet Corn Cobs - 4 ct,515
+67,$1.69,Vitamin D Whole Milk - 1/2 gal,712
+68,$3.99,oney Wheat Sliced Bread - 20 oz,314
+69,$2.29,Finely Shredded Colby Jack Cheese - 8 oz,522
+70,$0.75,Squash Yellow,307
+71,$2.00,Philadelphia Original Cream Cheese - 8 oz,682
+72,$4.99,Large Coca-Cola Soda - 6 bottles / 16.9 fl oz,674
+73,$1.99,Shredded Iceberg Lettuce - 8 oz,0
+74,$2.29,Shredded Mild Cheddar Cheese - 8 oz,490
+75,$0.18,Jalapeno Peppers - $1.19/lb,515
+76,$1.99,Yellow Onions - 3 lb,677
+77,$2.29,Gold Pineapple - 1 ct,658
+78,$1.20,Red Tomatoes,750
+79,$0.79,Green Cabbage - 1 lb,361
+80,$6.99,Seedless Watermelon - 1 ct,624
+81,$2.99,1% Lowfat Milk - 1 gal,460
+82,$2.19,Half & Half - 32 fl oz,337
+83,$5.49,Naturally Hardwood Smoked Bacon - 16 oz,669
+84,$3.49,Doritos® Cool Ranch Tortilla Chips - 9.25 oz,708
+85,$5.99,Dr Pepper® Soda - 12 cans / 12 fl oz,358
+86,$4.49,Deer Park® Natural Spring Water - 24 bottles / 16.9 fl oz,281
+87,$3.49,Kraft SINGLES American Cheese Slices - 16 ct,729
+88,$3.29,Old Fashioned White Bread - 20 oz,503
+89,$1.79,100% Apple Juice from Concentrate - 64 fl oz,607
+90,$5.99,Private Selection 80% Angus Lean Ground Beef - 1 lb,490
+91,$3.49,Fritos® Original Corn Chips - 9.25 oz,599
+92,$1.50,Orange Bell Pepper - 1 ct,548
+93,$2.99,Fully Cooked Hardwood Smoke Flavor Traditional Bacon - 2.1 oz,718
+94,$0.50,White Onions - $0.99/lb,326
+95,$2.19,Original Cream Cheese - 2 ct / 8 oz,263
+96,$2.50,Lay's® Classic Potato Chips - 8 oz,326
