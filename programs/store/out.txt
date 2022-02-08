@@ -1,0 +1,271 @@
+Edna clocking in at 7 for 8 hours. Time is 13, leaves at 15
+Tomasina clocking in at 9 for 8 hours. Time is 13, leaves at 17
+Gerianne clocking in at 13 for 8 hours. Time is 13, leaves at 21
+Elonore clocking in at 6 for 8 hours. Time is 13, leaves at 14
+Aurel clocking in at 7 for 8 hours. Time is 13, leaves at 15
+Jacintha clocking in at 9 for 6 hours. Time is 13, leaves at 15
+Phyllida clocking in at 7 for 8 hours. Time is 13, leaves at 15
+Marsiella clocking in at 11 for 6 hours. Time is 13, leaves at 17
+Prue clocking in at 7 for 8 hours. Time is 13, leaves at 15
+Dalia clocking in at 11 for 6 hours. Time is 13, leaves at 17
+Waneta clocking in at 7 for 8 hours. Time is 13, leaves at 15
+Tabina clocking in at 9 for 8 hours. Time is 13, leaves at 17
+Clarine starting at 2022-02-07 13:49:07 to 2022-02-07 14:32:15 for 178 items.
+  Creating new customer Clarine shopping for 178 items for 2588 seconds
+Carlyn starting at 2022-02-07 13:49:07 to 2022-02-07 13:54:00 for 17 items.
+  Creating new customer Carlyn shopping for 17 items for 293 seconds
+Pollyanna starting at 2022-02-07 13:49:07 to 2022-02-07 13:57:39 for 34 items.
+  Creating new customer Pollyanna shopping for 34 items for 512 seconds
+Trenna starting at 2022-02-07 13:49:07 to 2022-02-07 14:37:20 for 196 items.
+  Creating new customer Trenna shopping for 196 items for 2893 seconds
+Carlynne starting at 2022-02-07 13:49:07 to 2022-02-07 13:58:20 for 32 items.
+  Creating new customer Carlynne shopping for 32 items for 553 seconds
+Honor starting at 2022-02-07 13:49:07 to 2022-02-07 14:36:56 for 197 items.
+  Creating new customer Honor shopping for 197 items for 2869 seconds
+Evangelin starting at 2022-02-07 13:49:07 to 2022-02-07 14:24:14 for 142 items.
+  Creating new customer Evangelin shopping for 142 items for 2107 seconds
+Florrie starting at 2022-02-07 13:49:07 to 2022-02-07 14:16:29 for 109 items.
+  Creating new customer Florrie shopping for 109 items for 1642 seconds
+Marie starting at 2022-02-07 13:49:07 to 2022-02-07 13:50:09 for 1 items.
+  Creating new customer Marie shopping for 1 items for 62 seconds
+Joell starting at 2022-02-07 13:49:07 to 2022-02-07 14:01:13 for 49 items.
+  Creating new customer Joell shopping for 49 items for 726 seconds
+Jessalyn starting at 2022-02-07 13:49:07 to 2022-02-07 14:26:19 for 155 items.
+  Creating new customer Jessalyn shopping for 155 items for 2232 seconds
+Lita starting at 2022-02-07 13:49:07 to 2022-02-07 14:41:30 for 216 items.
+  Creating new customer Lita shopping for 216 items for 3143 seconds
+Velma starting at 2022-02-07 13:49:07 to 2022-02-07 14:10:03 for 85 items.
+  Creating new customer Velma shopping for 85 items for 1256 seconds
+Jammie starting at 2022-02-07 13:49:07 to 2022-02-07 14:36:17 for 193 items.
+  Creating new customer Jammie shopping for 193 items for 2830 seconds
+Chanda starting at 2022-02-07 13:49:07 to 2022-02-07 14:32:39 for 181 items.
+  Creating new customer Chanda shopping for 181 items for 2612 seconds
+Celia starting at 2022-02-07 13:49:07 to 2022-02-07 14:20:16 for 127 items.
+  Creating new customer Celia shopping for 127 items for 1869 seconds
+Adeline starting at 2022-02-07 13:49:07 to 2022-02-07 14:37:53 for 197 items.
+  Creating new customer Adeline shopping for 197 items for 2926 seconds
+Alena starting at 2022-02-07 13:49:07 to 2022-02-07 14:11:44 for 93 items.
+  Creating new customer Alena shopping for 93 items for 1357 seconds
+Meridel starting at 2022-02-07 13:49:07 to 2022-02-07 13:50:57 for 6 items.
+  Creating new customer Meridel shopping for 6 items for 110 seconds
+Thelma starting at 2022-02-07 13:49:07 to 2022-02-07 14:46:29 for 239 items.
+  Creating new customer Thelma shopping for 239 items for 3442 seconds
+Sabina starting at 2022-02-07 13:49:07 to 2022-02-07 14:04:18 for 58 items.
+  Creating new customer Sabina shopping for 58 items for 911 seconds
+Deny starting at 2022-02-07 13:49:07 to 2022-02-07 14:23:12 for 138 items.
+  Creating new customer Deny shopping for 138 items for 2045 seconds
+Ada starting at 2022-02-07 13:49:07 to 2022-02-07 14:42:43 for 221 items.
+  Creating new customer Ada shopping for 221 items for 3216 seconds
+Dee Dee starting at 2022-02-07 13:49:07 to 2022-02-07 14:21:54 for 134 items.
+  Creating new customer Dee Dee shopping for 134 items for 1967 seconds
+Glynis starting at 2022-02-07 13:49:07 to 2022-02-07 14:13:17 for 98 items.
+  Creating new customer Glynis shopping for 98 items for 1450 seconds
+Timi starting at 2022-02-07 13:49:07 to 2022-02-07 14:10:09 for 85 items.
+  Creating new customer Timi shopping for 85 items for 1262 seconds
+Ayn starting at 2022-02-07 13:49:07 to 2022-02-07 14:23:09 for 141 items.
+  Creating new customer Ayn shopping for 141 items for 2042 seconds
+Winifred starting at 2022-02-07 13:49:07 to 2022-02-07 14:17:06 for 115 items.
+  Creating new customer Winifred shopping for 115 items for 1679 seconds
+Rosita starting at 2022-02-07 13:49:07 to 2022-02-07 14:09:07 for 82 items.
+  Creating new customer Rosita shopping for 82 items for 1200 seconds
+Inger starting at 2022-02-07 13:49:07 to 2022-02-07 13:56:31 for 30 items.
+  Creating new customer Inger shopping for 30 items for 444 seconds
+Heidie starting at 2022-02-07 13:49:07 to 2022-02-07 14:18:29 for 116 items.
+  Creating new customer Heidie shopping for 116 items for 1762 seconds
+Ange starting at 2022-02-07 13:49:07 to 2022-02-07 14:16:22 for 107 items.
+  Creating new customer Ange shopping for 107 items for 1635 seconds
+Abbe starting at 2022-02-07 13:49:07 to 2022-02-07 14:07:53 for 75 items.
+  Creating new customer Abbe shopping for 75 items for 1126 seconds
+Nelli starting at 2022-02-07 13:49:07 to 2022-02-07 14:17:18 for 112 items.
+  Creating new customer Nelli shopping for 112 items for 1691 seconds
+Adella starting at 2022-02-07 13:49:07 to 2022-02-07 13:57:13 for 32 items.
+  Creating new customer Adella shopping for 32 items for 486 seconds
+Del starting at 2022-02-07 13:49:07 to 2022-02-07 14:31:39 for 174 items.
+  Creating new customer Del shopping for 174 items for 2552 seconds
+Bidget starting at 2022-02-07 13:49:07 to 2022-02-07 14:03:22 for 59 items.
+  Creating new customer Bidget shopping for 59 items for 855 seconds
+Agretha starting at 2022-02-07 13:49:07 to 2022-02-07 14:28:46 for 159 items.
+  Creating new customer Agretha shopping for 159 items for 2379 seconds
+Sybilla starting at 2022-02-07 13:49:07 to 2022-02-07 14:08:46 for 78 items.
+  Creating new customer Sybilla shopping for 78 items for 1179 seconds
+Andi starting at 2022-02-07 13:49:07 to 2022-02-07 14:43:04 for 219 items.
+  Creating new customer Andi shopping for 219 items for 3237 seconds
+Kath starting at 2022-02-07 13:49:07 to 2022-02-07 14:15:53 for 106 items.
+  Creating new customer Kath shopping for 106 items for 1606 seconds
+Angeline starting at 2022-02-07 13:49:07 to 2022-02-07 14:12:32 for 97 items.
+  Creating new customer Angeline shopping for 97 items for 1405 seconds
+Minetta starting at 2022-02-07 13:49:07 to 2022-02-07 13:56:57 for 29 items.
+  Creating new customer Minetta shopping for 29 items for 470 seconds
+Claresta starting at 2022-02-07 13:49:07 to 2022-02-07 14:01:40 for 49 items.
+  Creating new customer Claresta shopping for 49 items for 753 seconds
+Yvette starting at 2022-02-07 13:49:07 to 2022-02-07 14:25:11 for 144 items.
+  Creating new customer Yvette shopping for 144 items for 2164 seconds
+Imelda starting at 2022-02-07 13:49:07 to 2022-02-07 14:11:12 for 89 items.
+  Creating new customer Imelda shopping for 89 items for 1325 seconds
+Cayla starting at 2022-02-07 13:49:07 to 2022-02-07 14:09:46 for 85 items.
+  Creating new customer Cayla shopping for 85 items for 1239 seconds
+Camala starting at 2022-02-07 13:49:07 to 2022-02-07 13:52:06 for 11 items.
+  Creating new customer Camala shopping for 11 items for 179 seconds
+Barbee starting at 2022-02-07 13:49:07 to 2022-02-07 14:35:31 for 188 items.
+  Creating new customer Barbee shopping for 188 items for 2784 seconds
+Row starting at 2022-02-07 13:49:07 to 2022-02-07 14:38:59 for 204 items.
+  Creating new customer Row shopping for 204 items for 2992 seconds
+Andrea starting at 2022-02-07 13:49:07 to 2022-02-07 13:56:29 for 30 items.
+  Creating new customer Andrea shopping for 30 items for 442 seconds
+Marguerite starting at 2022-02-07 13:49:07 to 2022-02-07 14:12:34 for 93 items.
+  Creating new customer Marguerite shopping for 93 items for 1407 seconds
+Paola starting at 2022-02-07 13:49:07 to 2022-02-07 14:42:49 for 219 items.
+  Creating new customer Paola shopping for 219 items for 3222 seconds
+Christal starting at 2022-02-07 13:49:07 to 2022-02-07 14:38:36 for 200 items.
+  Creating new customer Christal shopping for 200 items for 2969 seconds
+Josefa starting at 2022-02-07 13:49:07 to 2022-02-07 14:36:21 for 196 items.
+  Creating new customer Josefa shopping for 196 items for 2834 seconds
+Kaye starting at 2022-02-07 13:49:07 to 2022-02-07 14:34:00 for 182 items.
+  Creating new customer Kaye shopping for 182 items for 2693 seconds
+Vannie starting at 2022-02-07 13:49:07 to 2022-02-07 14:44:07 for 225 items.
+  Creating new customer Vannie shopping for 225 items for 3300 seconds
+Natty starting at 2022-02-07 13:49:07 to 2022-02-07 14:20:00 for 126 items.
+  Creating new customer Natty shopping for 126 items for 1853 seconds
+Jorey starting at 2022-02-07 13:49:07 to 2022-02-07 14:29:08 for 164 items.
+  Creating new customer Jorey shopping for 164 items for 2401 seconds
+Lea starting at 2022-02-07 13:49:07 to 2022-02-07 14:37:30 for 197 items.
+  Creating new customer Lea shopping for 197 items for 2903 seconds
+Kirbee starting at 2022-02-07 13:49:07 to 2022-02-07 14:43:08 for 220 items.
+  Creating new customer Kirbee shopping for 220 items for 3241 seconds
+Agneta starting at 2022-02-07 13:49:07 to 2022-02-07 14:29:54 for 168 items.
+  Creating new customer Agneta shopping for 168 items for 2447 seconds
+Nadia starting at 2022-02-07 13:49:07 to 2022-02-07 14:02:43 for 50 items.
+  Creating new customer Nadia shopping for 50 items for 816 seconds
+Rikki starting at 2022-02-07 13:49:07 to 2022-02-07 13:56:21 for 25 items.
+  Creating new customer Rikki shopping for 25 items for 434 seconds
+Casandra starting at 2022-02-07 13:49:07 to 2022-02-07 14:02:14 for 48 items.
+  Creating new customer Casandra shopping for 48 items for 787 seconds
+Cassey starting at 2022-02-07 13:49:07 to 2022-02-07 14:20:51 for 129 items.
+  Creating new customer Cassey shopping for 129 items for 1904 seconds
+Aeriel starting at 2022-02-07 13:49:07 to 2022-02-07 14:03:06 for 53 items.
+  Creating new customer Aeriel shopping for 53 items for 839 seconds
+Teresina starting at 2022-02-07 13:49:07 to 2022-02-07 14:29:06 for 163 items.
+  Creating new customer Teresina shopping for 163 items for 2399 seconds
+Vonnie starting at 2022-02-07 13:49:07 to 2022-02-07 14:04:52 for 59 items.
+  Creating new customer Vonnie shopping for 59 items for 945 seconds
+Linea starting at 2022-02-07 13:49:07 to 2022-02-07 13:54:16 for 21 items.
+  Creating new customer Linea shopping for 21 items for 309 seconds
+TRAFFIC:  70
+MON 07/02/2022 13:49:07 Traffic: 70 Employees: 12
+   r:   31   hour_traffic:   65
+Lanita starting at 2022-02-07 13:49:07 to 2022-02-07 13:56:51 for 31 items.
+  Creating new customer Lanita shopping for 31 items for 463 seconds
+   NIGGGG 13 49 7
+MON 07/02/2022 13:49:08 Traffic: 71 Employees: 12
+   r:   57   hour_traffic:   65
+Bell starting at 2022-02-07 13:49:08 to 2022-02-07 14:13:41 for 100 items.
+  Creating new customer Bell shopping for 100 items for 1472 seconds
+   NIGGGG 13 49 8
+MON 07/02/2022 13:49:09 Traffic: 72 Employees: 12
+   r:   23   hour_traffic:   65
+Benny starting at 2022-02-07 13:49:09 to 2022-02-07 14:46:40 for 237 items.
+  Creating new customer Benny shopping for 237 items for 3450 seconds
+   NIGGGG 13 49 9
+MON 07/02/2022 13:49:10 Traffic: 73 Employees: 12
+   r:   17   hour_traffic:   65
+Leann starting at 2022-02-07 13:49:10 to 2022-02-07 14:25:26 for 147 items.
+  Creating new customer Leann shopping for 147 items for 2175 seconds
+   NIGGGG 13 49 10
+MON 07/02/2022 13:49:11 Traffic: 74 Employees: 12
+   r:    3   hour_traffic:   65
+Corie starting at 2022-02-07 13:49:11 to 2022-02-07 14:38:00 for 197 items.
+  Creating new customer Corie shopping for 197 items for 2928 seconds
+   NIGGGG 13 49 11
+MON 07/02/2022 13:49:12 Traffic: 75 Employees: 12
+   r:    4   hour_traffic:   65
+Astrid starting at 2022-02-07 13:49:12 to 2022-02-07 14:05:31 for 66 items.
+  Creating new customer Astrid shopping for 66 items for 978 seconds
+   NIGGGG 13 49 12
+MON 07/02/2022 13:49:13 Traffic: 76 Employees: 12
+   r:    4   hour_traffic:   65
+Cynthea starting at 2022-02-07 13:49:13 to 2022-02-07 14:44:26 for 226 items.
+  Creating new customer Cynthea shopping for 226 items for 3312 seconds
+   NIGGGG 13 49 13
+MON 07/02/2022 13:49:14 Traffic: 77 Employees: 12
+   r:   29   hour_traffic:   65
+Allene starting at 2022-02-07 13:49:14 to 2022-02-07 14:46:33 for 235 items.
+  Creating new customer Allene shopping for 235 items for 3438 seconds
+   NIGGGG 13 49 14
+MON 07/02/2022 13:49:15 Traffic: 78 Employees: 12
+   r:   34   hour_traffic:   65
+Annetta starting at 2022-02-07 13:49:15 to 2022-02-07 14:02:25 for 49 items.
+  Creating new customer Annetta shopping for 49 items for 789 seconds
+   NIGGGG 13 49 15
+MON 07/02/2022 13:49:16 Traffic: 79 Employees: 12
+   r:   22   hour_traffic:   65
+Siusan starting at 2022-02-07 13:49:16 to 2022-02-07 14:28:04 for 161 items.
+  Creating new customer Siusan shopping for 161 items for 2327 seconds
+   NIGGGG 13 49 16
+MON 07/02/2022 13:49:17 Traffic: 80 Employees: 12
+   r:   35   hour_traffic:   65
+Harley starting at 2022-02-07 13:49:17 to 2022-02-07 13:59:56 for 42 items.
+  Creating new customer Harley shopping for 42 items for 638 seconds
+   NIGGGG 13 49 17
+MON 07/02/2022 13:49:18 Traffic: 81 Employees: 12
+   r:   64   hour_traffic:   65
+Vonnie starting at 2022-02-07 13:49:18 to 2022-02-07 14:08:41 for 80 items.
+  Creating new customer Vonnie shopping for 80 items for 1162 seconds
+   NIGGGG 13 49 18
+MON 07/02/2022 13:49:19 Traffic: 82 Employees: 12
+   r:   45   hour_traffic:   65
+Leticia starting at 2022-02-07 13:49:19 to 2022-02-07 13:53:50 for 15 items.
+  Creating new customer Leticia shopping for 15 items for 270 seconds
+   NIGGGG 13 49 19
+MON 07/02/2022 13:49:20 Traffic: 83 Employees: 12
+   r:   43   hour_traffic:   65
+Malinda starting at 2022-02-07 13:49:20 to 2022-02-07 14:28:54 for 160 items.
+  Creating new customer Malinda shopping for 160 items for 2373 seconds
+   NIGGGG 13 49 20
+MON 07/02/2022 13:49:21 Traffic: 84 Employees: 12
+   r:   42   hour_traffic:   65
+Shandy starting at 2022-02-07 13:49:21 to 2022-02-07 14:20:18 for 122 items.
+  Creating new customer Shandy shopping for 122 items for 1856 seconds
+   NIGGGG 13 49 21
+MON 07/02/2022 13:49:22 Traffic: 85 Employees: 12
+   r:   47   hour_traffic:   65
+Etheline starting at 2022-02-07 13:49:22 to 2022-02-07 13:52:42 for 7 items.
+  Creating new customer Etheline shopping for 7 items for 199 seconds
+   NIGGGG 13 49 22
+MON 07/02/2022 13:49:23 Traffic: 86 Employees: 12
+   r:   53   hour_traffic:   65
+Evangelina starting at 2022-02-07 13:49:23 to 2022-02-07 14:03:45 for 59 items.
+  Creating new customer Evangelina shopping for 59 items for 861 seconds
+   NIGGGG 13 49 23
+MON 07/02/2022 13:49:24 Traffic: 87 Employees: 12
+   r:    4   hour_traffic:   65
+Aleen starting at 2022-02-07 13:49:24 to 2022-02-07 13:51:10 for 2 items.
+  Creating new customer Aleen shopping for 2 items for 105 seconds
+   NIGGGG 13 49 24
+MON 07/02/2022 13:49:25 Traffic: 88 Employees: 12
+   r:   28   hour_traffic:   65
+Pavia starting at 2022-02-07 13:49:25 to 2022-02-07 14:09:19 for 78 items.
+  Creating new customer Pavia shopping for 78 items for 1193 seconds
+   NIGGGG 13 49 25
+MON 07/02/2022 13:49:26 Traffic: 89 Employees: 12
+   r:    1   hour_traffic:   65
+Kathe starting at 2022-02-07 13:49:26 to 2022-02-07 13:53:18 for 10 items.
+  Creating new customer Kathe shopping for 10 items for 231 seconds
+   NIGGGG 13 49 26
+MON 07/02/2022 13:49:27 Traffic: 90 Employees: 12
+   r:   31   hour_traffic:   65
+Bev starting at 2022-02-07 13:49:27 to 2022-02-07 14:35:14 for 186 items.
+  Creating new customer Bev shopping for 186 items for 2746 seconds
+   NIGGGG 13 49 27
+MON 07/02/2022 13:49:28 Traffic: 91 Employees: 12
+   r:   20   hour_traffic:   65
+Tamma starting at 2022-02-07 13:49:28 to 2022-02-07 14:21:20 for 130 items.
+  Creating new customer Tamma shopping for 130 items for 1911 seconds
+   NIGGGG 13 49 28
+MON 07/02/2022 13:49:29 Traffic: 92 Employees: 12
+   r:   14   hour_traffic:   65
+Meaghan starting at 2022-02-07 13:49:29 to 2022-02-07 13:56:18 for 27 items.
+  Creating new customer Meaghan shopping for 27 items for 408 seconds
+   NIGGGG 13 49 29
+MON 07/02/2022 13:49:30 Traffic: 93 Employees: 12
+   r:   62   hour_traffic:   65
+Lari starting at 2022-02-07 13:49:30 to 2022-02-07 14:44:10 for 223 items.
