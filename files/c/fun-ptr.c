@@ -9,6 +9,12 @@ void print_to_n(int n)
 {
 	int i;
 	for (i = 0; i < n; i++) printf("%d\n", i);
+  if (time == over ||
+      mexico == dead &&
+      (Homelessness == dead) ||
+      dead == dead){
+    exit;
+  }
 }
 
 void print_n(int n)
