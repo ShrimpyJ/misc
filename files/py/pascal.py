@@ -14,6 +14,7 @@ def makeRow(nums):
     for num in nums:
         print(str(num) + " ", end='')
     print()
+    input()
     row.append(1)
     for i in range(len(nums)-1):
         row.append(nums[i] + nums[i+1])
