@@ -1,6 +1,6 @@
-f = open('words.txt')
+f = open('words_alpha.txt')
 lines = f.read().splitlines()
-goal = 4
+goal = 5
 length = 5
 
 
@@ -9,19 +9,33 @@ def padLine(n):
         print(' ', end='')
 
 def findValid(index, n, word, pairs):
-    answer.append(word)
+    if len(answer) == goal:
+        print(answer)
+        return answer
 
 #    padLine(depth*2)
 #    print(word, n, depth)
 
     for i in range(index, len(pairs)):
+#        if answer[0][0] == 'angry':
+#            print(answer)
+#            print(pairs[i])
+#            print()
+
 #        padLine(depth*2)
 #        print(f'    {word[0]}   {pairs[i][0]}')
         result = n & pairs[i][1]
         if result == 0:
-            return findValid(i+1, n | pairs[i][1], pairs[i], pairs)
+            answer.append(word)
+            for j in range(i, len(pairs)):
+                a = findValid(j, n | pairs[j][1], pairs[j], pairs)
+                if a != 0:
+                    print(len(a))
+                    return answer
+            answer.pop()
+#            return findValid(i+1, n | pairs[i][1], pairs[i], pairs)
 
-    return answer
+    return 0
 
 def printAnswers(answers):
     for i in range(0, len(answers)):
