@@ -1,3 +1,15 @@
-[['angry', 16916545]]
-['angst', 794689]
-
+PUSHING angry
+['angry', 'bumph', 'fldxt', 'vejoz', 'wicks']
+5
+5
+5
+5
+a b f v w 
+PUSHING ambry
+PUSHING bejig
+PUSHING fconv
+PUSHING becks
+PUSHING bumph
+PUSHING fldxt
+PUSHING damns
+Reached clams, exiting...

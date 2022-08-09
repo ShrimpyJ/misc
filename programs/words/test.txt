@@ -1,7 +1,11 @@
-angry
+ANgRY
 ambry
 bejig
 bewib
+aabcd
+abbcd
+abccd
+abcdd
 fconv
 apple
 becks
@@ -9,6 +13,7 @@ bumph
 fldxt
 bob
 damns
+swick
 clams
 fisty
 misty
