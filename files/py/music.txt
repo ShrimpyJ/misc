@@ -3,12 +3,14 @@ a-ha - Lifelines
 a-ha - Manhattan Skyline
 Duffy - Distant Dreamer
 Ghost - Cirice
+Ghost - Rats
+Ghost - Faith
+Ghost - See the Light
 Ghost - Miasma
 Ghost - Spillways
 Ghost - Watcher In The Sky
 Ghost - Respite on the Spitalfields
 Ghost - Call Me Little Sunshine
-Ghost - Dance Macabre
 Ghost - Kaiserion
 Ghost - Ritual
 Ghost - Death Knell
