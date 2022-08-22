@@ -8,7 +8,6 @@ base="https://lkml.org/lkml"
 urls="urls.txt"
 start_year=1996
 end_year=2022
-cur_year=$start_year
 start_month=1
 start_day=1
 
