@@ -70,7 +70,7 @@ ACscreen *ac_screenInit(int height, int width, int start_y, int start_x)
   // Menus are syntactic sugar for screens
   s->nitems = 0;
   s->items = calloc(1, sizeof(char *));
-  s->cur_item = 0;              // Currently highlighted item
+  s->cur_item = 0;       // Currently highlighted item
   s->item_start_x = 1;   // Starting position of items list
   s->item_start_y = 1;   // Starting position of items list
   s->top_visible = 0;    // Track the top and bottom
