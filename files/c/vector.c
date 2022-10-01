@@ -1,17 +1,38 @@
-#include <stdlib.h>
+#include <immintrin.h>
 #include <stdio.h>
-#include "vector.h"
+#include <stdlib.h>
 
-int main(int argc, char** argv)
+#define MAX 1000000000
+
+void vector_add()
 {
-	vector* v = (vector*) malloc(sizeof(vector));
-	vector_init(v);
+  __m256i first = _mm256_set_epi32(0, 10, 20, 30, 40, 50, 60, 70);
+  __m256i second = _mm256_set_epi32(1, 1, 1, 1, 1, 1, 1, 1);
+  __m256i result = _mm256_add_epi32(first, second);
 
-	for (int i = 0; i < 36326; i++) vector_push_back(v, i*2);
+  int *values = (int *) &result;
 
-	vector_print(v);
+  for (int i = 0; i < MAX; i++){
+    for (unsigned short j = 0; j < 8; j++){
+    }
+    result = _mm256_add_epi32(result, second);
+  }
+}
 
-	vector_destroy(v);
+void serial_add()
+{
+  int first[8] = {70, 60, 50, 40, 30, 20, 10, 0};
+  int second[8] = {1, 1, 1, 1, 1, 1, 1, 1};
 
-	return 0;
+  for (int i = 0; i < MAX; i++){
+    for (int j = 0; j < 8; j++){
+      first[j] += second[j];
+    }
+  }
+}
+
+int main(int argc, char **argv)
+{
+  vector_add();
+//  serial_add();
 }
