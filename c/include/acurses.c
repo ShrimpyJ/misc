@@ -209,15 +209,15 @@ void ac_itemStart(ACmenu *m, int y, int x, int height, int width)
   m->item_start_y = y;
   m->item_start_x = x;
 
-  if (y + height > m->height) height = m->height-m->border_offset - y;
-  if (x + width > m->width) width = m->width-m->border_offset - x;
+  if (y + height > m->height) height = m->height - m->border_offset - y;
+  if (x + width > m->width) width = m->width - m->border_offset - x;
   m->item_height = height;
   m->item_height = width;
   m->item_end_y = y + height;
-  if (m->item_end_y > m->height) m->item_end_y = m->height-m->border_offset;
+  if (m->item_end_y > m->height) m->item_end_y = m->height - m->border_offset;
   m->item_end_x = x + width;
-  if (m->item_end_x > m->width) m->item_end_x = m->width-m->border_offset;
-  m->bot_visible -= m->item_start_y-1;
+  if (m->item_end_x > m->width) m->item_end_x = m->width - m->border_offset;
+  m->bot_visible -= m->item_start_y - 1;
 }
 
 // Add a string to the end of a menu's item list
@@ -242,7 +242,6 @@ void ac_addItems(ACmenu *m, char **items, int nitems)
 void ac_highlight(ACmenu *m, int y, int x)
 {
   int i;
-
 
   if (!m->hl_line && !m->hl_forward && !m->hl_backward) return;
 
