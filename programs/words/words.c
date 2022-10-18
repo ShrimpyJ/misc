@@ -67,9 +67,9 @@ void answer_print(Answer *a)
 {
   int i;
   for (i = 0; i < a->nitems; i++){
-    printf("%s ", a->p[i]->word);
+//    printf("%s ", a->p[i]->word);
   }
-  printf("\n");
+//  printf("\n");
 }
 
 void answer_free(Answer *a)
@@ -170,7 +170,7 @@ int findValid(int index, int n, Pair *word, Pair **pairs, int npairs, Answer *an
 
   /* Base case: done when answer array contains enough pairs */
   if (answer->nitems == TARGET){
-    printf("Answer found: ");
+//    printf("Answer found: ");
     answer_print(answer);
     return 1;
   }
@@ -253,7 +253,6 @@ int main(int argc, char** argv)
   /* Find cliques, trying each word in the list */
   for (i = 0; i < index; i++){
     /* Init answer */
-    printf("trying %s\n", pairs[i]->word);
     answer = answer_init();
     answer_push(answer, pairs[i]);
 
